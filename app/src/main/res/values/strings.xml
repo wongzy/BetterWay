@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BetterWay</string>
+    <string name="add_smartschedule">自动规划路径</string>
+    <string name="add_nomalschedule">自定义计划</string>
+</resources>
