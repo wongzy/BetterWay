@@ -14,7 +14,6 @@ import com.android.betterway.utils.LogUtil;
  * @version 1.0
  * 实现一个FloatingActionButton的容器
  */
-
 public class FloatingActionButtonMenu extends ViewGroup {
     private static final int SHOW = 1; //子控件可见时的状态
     private static final int HIDE = 2; //子控件不可见时的状态
@@ -22,29 +21,23 @@ public class FloatingActionButtonMenu extends ViewGroup {
     private final float rotation = 45f; //点击时旋转角度
     private final long duration = 300; //动画事件间隔
     private final long otherDuration = 400; //其他动画的间隔
-    private final float scalingWidth = 1.2f; //拉伸比
-    private final String tag = "FloatingButtonMenu"; //打印事件的标签
+    private static final float SCALING = 1.2f; //拉伸比
+    private static final String TAG = "FloatingButtonMenu"; //打印事件的标签
 
     public FloatingActionButtonMenu(Context context) {
         super(context);
-        LogUtil.v(tag, "constructor");
+        LogUtil.v(TAG, "constructor");
     }
 
     public FloatingActionButtonMenu(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LogUtil.v(tag, "constructor");
+        LogUtil.v(TAG, "constructor");
     }
 
     public FloatingActionButtonMenu(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LogUtil.v(tag, "constructor");
+        LogUtil.v(TAG, "constructor");
     }
-
-    public FloatingActionButtonMenu(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        LogUtil.v(tag, "constructor");
-    }
-
 
 
     /**
@@ -54,7 +47,7 @@ public class FloatingActionButtonMenu extends ViewGroup {
      */
     @Override
     public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
-        LogUtil.d(tag, "return MarginLayoutParams");
+        LogUtil.d(TAG, "return MarginLayoutParams");
         return new MarginLayoutParams(getContext(), attrs);
     }
 
@@ -65,7 +58,7 @@ public class FloatingActionButtonMenu extends ViewGroup {
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        LogUtil.v(tag, "onMeasure");
+        LogUtil.v(TAG, "onMeasure");
         // 获得此ViewGroup上级容器为其推荐的宽和高，以及计算模式
         // 所得既为设置match_parent时的大小
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
@@ -76,23 +69,21 @@ public class FloatingActionButtonMenu extends ViewGroup {
         measureChildren(widthMeasureSpec, heightMeasureSpec);
         // 记录如果是wrap_content是设置的宽和高
         int childCount = getChildCount();
-        MarginLayoutParams layoutParms = null;
+        MarginLayoutParams layoutParams;
         //宽为各个子View的最大值，高为总和
         int width = 0, height = 0;
         for (int i = 0; i < childCount; i++) {
             View childView = getChildAt(i);
-            layoutParms = (MarginLayoutParams) childView.getLayoutParams();
-            int cWidth = childView.getMeasuredWidth() + layoutParms.rightMargin + layoutParms.leftMargin;
+            layoutParams = (MarginLayoutParams) childView.getLayoutParams();
+            int cWidth = childView.getMeasuredWidth() + layoutParams.rightMargin + layoutParams.leftMargin;
             int cHeight = childView.getMeasuredHeight();
             if (cWidth > width) {
                 width = cWidth;
             }
-            height += cHeight + layoutParms.bottomMargin + layoutParms.topMargin;
+            height += cHeight + layoutParams.bottomMargin + layoutParams.topMargin;
         }
-        /**
-         * 若为match_parent则将宽高设置为上级推荐的大小
-         * 否则则设置为计算出的大小，即为wrap_parent
-         */
+        // 若为match_parent则将宽高设置为上级推荐的大小
+        //否则则设置为计算出的大小，即为wrap_parent
         setMeasuredDimension((widthMode == MeasureSpec.EXACTLY)
                 ? sizeWidth : width, (heightMode == MeasureSpec.EXACTLY)
                 ? sizeHeight : height);
@@ -100,13 +91,10 @@ public class FloatingActionButtonMenu extends ViewGroup {
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        LogUtil.v(tag, "onLayout");
+        LogUtil.v(TAG, "onLayout");
         int cCount = getChildCount();
         MarginLayoutParams layoutParams;
-        /**
-         * 遍历所有childView根据其宽和高
-         * 指定相应位置
-         */
+         //遍历所有childView根据其宽和高,指定相应位置
         int height = 0;
         for (int i = 0; i < cCount; i++) {
             View childView = getChildAt(i);
@@ -125,48 +113,67 @@ public class FloatingActionButtonMenu extends ViewGroup {
         state = HIDE;
         setClick(getChildAt(cCount - 1));
     }
+
     /**设置按钮的点击监听
      * @param view 指定监听事件
      */
-    public void setClick(final View view) {
-        LogUtil.d(tag, "setClick");
+    private void setClick(final View view) {
+        LogUtil.d(TAG, "setClick");
         view.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (state == HIDE) {
-                    LogUtil.d(tag, "show other views");
-                    //当状态为不可见时，点击按钮弹出所有隐藏view
-                    ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", 0f, rotation);
-                    animator.setDuration(duration);
-                    animator.start();
-                    for (int i = 0; i < getChildCount() - 1; i++) {
-                        View childView = getChildAt(i);
-                        //简单属性动画
-                        ObjectAnimator childAnimator = ObjectAnimator.ofFloat(childView, "alpha", 0f, 1f);
-                        ObjectAnimator otherAnimator = ObjectAnimator.ofFloat(childView, "scaleX", 1.0f, scalingWidth, 1.0f);
-                        otherAnimator.setDuration(otherDuration);
-                        childAnimator.setDuration(otherDuration);
-                        otherAnimator.start();
-                        childAnimator.start();
-                        childView.setClickable(true);
-                        state = SHOW;
-                    }
+                    showOtherView(view);
                 } else {
-                    LogUtil.d(tag, "hide other views");
-                    //当状态为可见时，点击按钮隐藏所有view
-                    ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", rotation, 0f);
-                    animator.setDuration(duration);
-                    animator.start();
-                    for (int i = 0; i< getChildCount() - 1; i++){
-                        View childView = getChildAt(i);
-                        ObjectAnimator childAnimator = ObjectAnimator.ofFloat(childView, "alpha", 1f, 0f);
-                        childAnimator.setDuration(otherDuration);
-                        childAnimator.start();
-                        childView.setClickable(false);
-                        state = HIDE;
-                    }
+                    hideOtherView(view);
                 }
             }
         });
+    }
+
+    /**
+     * 显示其他的child view
+     * @param view 按钮
+     */
+    private void showOtherView(View view) {
+        LogUtil.d(TAG, "show other views");
+        //当状态为不可见时，点击按钮弹出所有隐藏view
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", 0f, rotation);
+        animator.setDuration(duration);
+        animator.start();
+        for (int i = 0; i < getChildCount() - 1; i++) {
+            View childView = getChildAt(i);
+            //简单属性动画
+            ObjectAnimator childAnimator = ObjectAnimator
+                    .ofFloat(childView, "alpha", 0f, 1f);
+            ObjectAnimator otherAnimator = ObjectAnimator
+                    .ofFloat(childView, "scaleX", 1.0f, SCALING, 1.0f);
+            otherAnimator.setDuration(otherDuration);
+            childAnimator.setDuration(otherDuration);
+            otherAnimator.start();
+            childAnimator.start();
+            childView.setClickable(true);
+            state = SHOW;
+        }
+    }
+
+    /**
+     * 隐藏其他child view
+     * @param view 按钮
+     */
+    private void hideOtherView(View view) {
+        LogUtil.d(TAG, "hide other views");
+        //当状态为可见时，点击按钮隐藏所有view
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, "rotation", rotation, 0f);
+        animator.setDuration(duration);
+        animator.start();
+        for (int i = 0; i < getChildCount() - 1; i++) {
+            View childView = getChildAt(i);
+            ObjectAnimator childAnimator = ObjectAnimator.ofFloat(childView, "alpha", 1f, 0f);
+            childAnimator.setDuration(otherDuration);
+            childAnimator.start();
+            childView.setClickable(false);
+            state = HIDE;
+        }
     }
 }

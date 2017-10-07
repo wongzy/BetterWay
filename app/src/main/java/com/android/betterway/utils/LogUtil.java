@@ -17,7 +17,7 @@ public final class LogUtil {
     private static final int NOTHING = 6;
     private static int state = VERBOSE;
 
-    private LogUtil() {}
+    private LogUtil() { }
 
     /**
      * 打印Verbose
@@ -69,7 +69,7 @@ public final class LogUtil {
      * @param string 说明
      */
     public static void e(String tag, String string) {
-        if (state <= ERROE){
+        if (state <= ERROE) {
             Log.e(tag, string);
         }
     }
