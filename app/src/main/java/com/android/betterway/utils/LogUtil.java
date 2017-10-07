@@ -13,7 +13,7 @@ public final class LogUtil {
     private static final int DEBUG = 2;
     private static final int INFO = 3;
     private static final int WARN = 4;
-    private static final int ERROE = 5;
+    private static final int ERROR = 5;
     private static final int NOTHING = 6;
     private static int state = VERBOSE;
 
@@ -69,7 +69,7 @@ public final class LogUtil {
      * @param string 说明
      */
     public static void e(String tag, String string) {
-        if (state <= ERROE) {
+        if (state <= ERROR) {
             Log.e(tag, string);
         }
     }

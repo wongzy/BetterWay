@@ -1,7 +1,6 @@
 package com.android.betterway.mainactivity.view;
 
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -25,7 +23,6 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
 /**
  * 主界面
  */
@@ -119,11 +116,10 @@ public class MainActivity extends AppCompatActivity implements MainView {
      */
     @OnClick({R.id.recyclerview, R.id.addAutoSchedule, R.id.addNormalSchedule})
     public void onViewClicked(View view) {
-        LogUtil.d(TAG, "onViewClicked");
+        LogUtil.v(TAG, "onViewClicked");
         switch (view.getId()) {
             case R.id.addAutoSchedule:
                 LogUtil.d(TAG, "click addAutoSchedule");
-                mMainPresenterImpel.addAutoSchedule();
                 break;
             case R.id.addNormalSchedule:
                 LogUtil.d(TAG, "click addNormalSchedule");

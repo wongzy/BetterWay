@@ -15,12 +15,10 @@ import javax.inject.Inject;
  */
 
 public class MainPresenterImpel implements MainPresenter {
-    private final MainView mMainView;
     private final Context mContext;
 
     @Inject
     public MainPresenterImpel(MainView mainView) {
-        this.mMainView = mainView;
         mContext = mainView.getContext();
     }
     @Override

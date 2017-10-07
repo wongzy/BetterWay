@@ -8,7 +8,7 @@ import java.util.List;
  *          BetterWay
  */
 
-public class ImageBean {
+class ImageBean {
     private TooltipsBean tooltips;
     private List<ImagesBean> images;
 
@@ -20,7 +20,14 @@ public class ImageBean {
         this.tooltips = tooltips;
     }
 
-    public List<ImagesBean> getImages() {
+    String getURL() {
+        return images.get(0).getUrl();
+    }
+
+    String getDate() {
+        return images.get(0).getEnddate();
+    }
+    List<ImagesBean> getImages() {
         return images;
     }
 

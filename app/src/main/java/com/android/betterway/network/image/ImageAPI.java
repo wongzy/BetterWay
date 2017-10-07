@@ -1,6 +1,7 @@
 package com.android.betterway.network.image;
 
-import io.reactivex.Observable;
+
+import io.reactivex.Flowable;
 import retrofit2.http.GET;
 
 /**
@@ -14,5 +15,5 @@ interface ImageAPI {
      * @return 实体类
      */
     @GET("HPImageArchive.aspx?format=js&idx=0&n=1")
-    Observable<ImageBean> image();
+    Flowable<ImageBean> getImage();
 }
