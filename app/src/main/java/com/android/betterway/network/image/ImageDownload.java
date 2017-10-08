@@ -37,8 +37,8 @@ public final class ImageDownload {
         final ImageAPI imageAPI = retrofit.create(ImageAPI.class);
         LogUtil.v(TAG, "downloadUrl");
         imageAPI.getImage()
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.newThread())
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
                 .subscribe(new Subscriber<ImageBean>() {
                     @Override
                     public void onSubscribe(Subscription s) {

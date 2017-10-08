@@ -17,6 +17,8 @@ import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent
 import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.utils.LogUtil;
+import com.android.betterway.utils.ToastUtil;
+
 
 import javax.inject.Inject;
 
@@ -111,7 +113,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     /**
      * 点击事件
-     *
      * @param view 传递点击事件的view
      */
     @OnClick({R.id.recyclerview, R.id.addAutoSchedule, R.id.addNormalSchedule})
@@ -129,4 +130,5 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 break;
         }
     }
+
 }
