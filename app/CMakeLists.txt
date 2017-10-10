@@ -19,12 +19,21 @@ add_library( # Sets the name of the library.
              # Provides a relative path to your source file(s).
              src/main/cpp/native-lib.cpp )
 
-# Searches for a specified prebuilt library and stores the path as a
-# variable. Because CMake includes system libraries in the search path by
-# default, you only need to specify the name of the public NDK library
-# you want to add. CMake verifies that the library exists before
-# completing its build.
-
+# 增加opencv库
+add_library( opencv_java3 SHARED IMPORTED )
+# 编译的平台是armeabi
+if(${ANDROID_ABI} STREQUAL "armeabi")
+# 设置动态库文件的路径属性
+set_target_properties(
+    opencv_java3
+    PROPERTIES IMPORTED_LOCATION
+    ${CMAKE_SOURCE_DIR}/src/main/jniLibs/armeabi/libopencv_java3.so
+    )
+endif(${ANDROID_ABI} STREQUAL "armeabi")
+# opencv库的头文件路径设置，在此是opencv-sdk的路径，当然你也可以把include目录拷贝到工程中
+include_directories(
+    D:/resource/sdkofopencv/sdk/native/jni/include
+)
 find_library( # Sets the name of the path variable.
               log-lib
 
@@ -38,7 +47,7 @@ find_library( # Sets the name of the path variable.
 
 target_link_libraries( # Specifies the target library.
                        native-lib
-
+                       opencv_java3
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib} )
