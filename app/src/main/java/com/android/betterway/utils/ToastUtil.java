@@ -9,7 +9,7 @@ import android.widget.Toast;
  *          BetterWay
  */
 
-public final class ToastUtil {
+ public final class ToastUtil {
     private ToastUtil() {
 
     }

@@ -8,7 +8,7 @@ import android.util.Log;
  *          BetterWay
  */
 
-public final class LogUtil {
+ public final class LogUtil {
     private static final int VERBOSE = 1;
     private static final int DEBUG = 2;
     private static final int INFO = 3;

@@ -16,7 +16,10 @@ android {
                 cppFlags "-std=c++11 -frtti -fexceptions"
             }
             ndk {
-                abiFilters "armeabi"
+                moduleName "blur_lib"   // 动态库名称
+                abiFilters "armeabi", "armeabi-v7a", "x86" // 相应的架构平台
+                ldLibs "log" //log输出
+                ldLibs "jnigraphics" //graphic相关jni
             }
         }
     }
@@ -53,4 +56,5 @@ dependencies {
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+    compile 'org.greenrobot:eventbus:3.1.0-RC'
 }
