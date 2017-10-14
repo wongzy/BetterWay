@@ -4,4 +4,24 @@
     <string name="add_nomalschedule">自定义计划</string>
     <string name="setting">设置</string>
     <string name="background">背景</string>
+    <string name="warning_setting">提醒设置</string>
+    <string name="weather_warn">日程开始前提醒</string>
+    <string name="waring_time_select">提前</string>
+    <string name="image_setting">图片设置</string>
+    <string name="use_default_image">使用默认壁纸</string>
+    <string name="use_local_image">使用本地壁纸</string>
+    <string name="weather_change_online">联网更新壁纸</string>
+    <string name="change_duration">更新时间间隔</string>
+    <string name="time_default">5分钟</string>
+    <string-array name="time">
+             <item >5分钟</item>
+             <item>15分钟</item>
+             <item>30分钟</item>
+             <item>45分钟</item>
+         </string-array>
+    <string name="updatetime_default">1天</string>
+    <string-array name="updatetime">
+        <item >1天</item>
+        <item>7天</item>
+    </string-array>
 </resources>

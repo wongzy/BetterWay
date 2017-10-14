@@ -18,7 +18,7 @@ import android.graphics.Bitmap;
      * @return  毛玻璃后的图片
      */
     public static Bitmap blur(Bitmap srcBitmap) {
-       blurBitmap(srcBitmap, 15);
+       blurBitmap(srcBitmap, 13);
         return srcBitmap;
     }
     static {

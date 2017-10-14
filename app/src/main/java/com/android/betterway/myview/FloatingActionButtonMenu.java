@@ -23,8 +23,8 @@ public class FloatingActionButtonMenu extends ViewGroup {
     private static final int HIDE = 2; //子控件不可见时的状态
     private static int state = HIDE; //保存状态，默认不可见
     private final float rotation = 45f; //点击时旋转角度
-    private final long duration = 600; //动画事件间隔
-    private final long otherDuration = 600; //其他动画的间隔
+    private final long duration = 450; //动画事件间隔
+    private final long otherDuration = 500; //其他动画的间隔
     private static final float SCALING = 1.2f; //拉伸比
     private static final String TAG = "FloatingButtonMenu"; //打印事件的标签
 

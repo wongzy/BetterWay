@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/warning_setting">
+        <SwitchPreference android:key="weather_warn"
+                          android:title="@string/weather_warn"
+                          android:summaryOff="开启后在日程开始前会弹出通知栏"
+                          android:summaryOn="会提醒日程"
+                          android:defaultValue="false"/>
+        <ListPreference android:key="warning_time"
+                        android:dependency="weather_warn"
+                        android:title="@string/waring_time_select"
+                        android:summary="开启提醒则需要设置这项,默认为15分钟"
+                        android:entries="@array/time"
+                        android:entryValues="@array/time"
+                        android:defaultValue="@string/time_default"
+                        android:dialogTitle="请选择提前时间"/>
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/image_setting">
+        <SwitchPreference android:key="use_default_image"
+                          android:title="@string/use_default_image"
+                          android:defaultValue="true"
+                          android:checked="true"
+                          android:summaryOn="使用默认图片"
+                          android:summaryOff="不使用默认图片"
+                          />
+        <SwitchPreference android:key="use_local_image"
+                          android:title="@string/use_local_image"
+                          android:checked="false"
+                          android:defaultValue="false"
+                          android:summaryOff="不使用本地图片"
+                          android:summaryOn="使用本地图片"
+                          />
+        <Preference android:key="local_image_location"
+                    android:title="选择本地图片"
+                    android:dependency="use_local_image"
+            />
+        <SwitchPreference android:key="update_image_online"
+                          android:title="@string/weather_change_online"
+                          android:summaryOff="不使用Bing每日一图更新壁纸"
+                          android:summaryOn="使用Bing每日一图更新壁纸"
+                          android:checked="false"
+                          android:defaultValue="false"/>
+        <ListPreference android:key="update_duration"
+                        android:dependency="update_image_online"
+                        android:title="@string/change_duration"
+                        android:entries="@array/updatetime"
+                        android:entryValues="@array/updatetime"
+                        android:summary="默认为一天更新一次"
+                        android:defaultValue="@string/updatetime_default"
+                        />
+    </PreferenceCategory>
+</PreferenceScreen>

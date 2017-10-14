@@ -1,6 +1,8 @@
 package com.android.betterway.mainactivity.view;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -11,9 +13,12 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageSwitcher;
 import android.widget.ImageView;
+import android.widget.ViewSwitcher;
 
 import com.android.betterway.R;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
@@ -21,16 +26,15 @@ import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.myview.FloatingActionButtonMenu;
 import com.android.betterway.other.ButtonSwith;
+import com.android.betterway.settingactivity.SettingActivity;
 import com.android.betterway.utils.BitmapCompress;
 import com.android.betterway.utils.BlurUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ScreenShotUtil;
-import com.android.betterway.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
 
 import java.lang.ref.WeakReference;
 
@@ -59,8 +63,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @Inject
     MainPresenterImpel mMainPresenterImpel;
 
-    @BindView(R.id.app_bar_image)
-    ImageView mAppBarImage;
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
     @BindView(R.id.recyclerview)
@@ -73,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     FrameLayout mBlurFragment;
     @BindView(R.id.floatingActionButtonMenu)
     FloatingActionButtonMenu mFloatingActionButtonMenu;
+    @BindView(R.id.app_bar_image)
+    ImageSwitcher mAppBarImage;
 
     @Override
     protected void onStart() {
@@ -94,8 +98,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
+    protected void onStop() {
+        super.onStop();
         EventBus.getDefault().unregister(this);
     }
 
@@ -105,7 +109,27 @@ public class MainActivity extends AppCompatActivity implements MainView {
     private void init() {
         LogUtil.d(TAG, "init");
         setSupportActionBar(mToolbar);
-
+        mBlurFragment.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mBlurFragment.getBackground() == null) {
+                    return false;
+                }
+                mBlurFragment.setBackground(null);
+                mFloatingActionButtonMenu.closeMenu();
+                return false;
+            }
+        });
+        mAppBarImage.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                LogUtil.v(TAG, "init ImageSwitcher");
+                ImageView imageView = new ImageView(MainActivity.this);
+                imageView.setScaleType(ImageView.ScaleType.CENTER); //居中显示
+                return imageView;
+            }
+        });
+        mAppBarImage.setImageResource(R.drawable.bg);
     }
 
     @Override
@@ -121,7 +145,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
         switch (item.getItemId()) {
             case R.id.setting:
                 LogUtil.d(TAG, "click setting");
-                mMainPresenterImpel.getSet();
+                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
+                startActivity(intent);
                 break;
             default:
                 break;
@@ -129,10 +154,6 @@ public class MainActivity extends AppCompatActivity implements MainView {
         return true;
     }
 
-    @Override
-    public Context getContext() {
-        return getApplicationContext();
-    }
 
     @Override
     public void enterSchedule() {
@@ -173,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     /**
      * EventBus接受事件
-     * @param buttonSwith 获取开源状态
+     *
+     * @param buttonSwith 获取开关状态
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onButtonSwithHandle(ButtonSwith buttonSwith) {
@@ -182,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     /**
      * 对所在界面截图
+     *
      * @param buttonSwith 接收的开关状态
      */
     private void showBlurBackground(ButtonSwith buttonSwith) {
@@ -206,11 +229,12 @@ public class MainActivity extends AppCompatActivity implements MainView {
                         @Override
                         public void accept(Drawable drawable) throws Exception {
                             mBlurFragment.setBackground(drawable);
-                            ToastUtil.show(getApplicationContext(), "blurbackground worked");
+                            LogUtil.d(TAG, "blur worked");
                         }
                     });
         } else {
             mBlurFragment.setBackground(null);
+            LogUtil.d(TAG, "blur free");
         }
     }
 }

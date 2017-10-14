@@ -23,19 +23,21 @@
             app:layout_scrollInterpolator="@android:anim/decelerate_interpolator"
             app:toolbarId="@+id/toolbar">
 
-            <ImageView
-                android:contentDescription="@string/background"
+            <ImageSwitcher
                 android:id="@+id/app_bar_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:contentDescription="@string/background"
                 android:scaleType="centerCrop"
-                android:src="@drawable/bg"/>
+                />
 
             <android.support.v7.widget.Toolbar
+                android:layout_marginTop="12dp"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize">
-            </android.support.v7.widget.Toolbar>
+                android:layout_height="?attr/actionBarSize"
+                android:fitsSystemWindows="true"
+                />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 

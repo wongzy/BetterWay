@@ -1,6 +1,7 @@
 package com.android.betterway.mainactivity.view;
 
 
+import android.app.Activity;
 import android.content.Context;
 
 /**
@@ -9,11 +10,6 @@ import android.content.Context;
  *          BetterWay
  */
 public interface MainView {
-    /**
-     * 获得当前类中的Context传递给MainPresenterImpel
-     * @return 实例所在的Context
-     */
-    Context getContext();
     /**
      * 查看详细行程
      */
