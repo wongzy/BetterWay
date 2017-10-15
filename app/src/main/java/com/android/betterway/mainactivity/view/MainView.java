@@ -11,6 +11,11 @@ import android.content.Context;
  */
 public interface MainView {
     /**
+     * 获得当前的活动
+     * @return 当前活动
+     */
+    Activity getActivity();
+    /**
      * 查看详细行程
      */
     void enterSchedule();

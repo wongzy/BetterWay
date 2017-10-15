@@ -22,21 +22,27 @@ import android.widget.ViewSwitcher;
 
 import com.android.betterway.R;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
+import com.android.betterway.mainactivity.daggerneed.MainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.myview.FloatingActionButtonMenu;
 import com.android.betterway.other.ButtonSwith;
-import com.android.betterway.settingactivity.SettingActivity;
+import com.android.betterway.settingactivity.view.SettingActivity;
+import com.android.betterway.settingactivity.view.SettingFragment;
 import com.android.betterway.utils.BitmapCompress;
 import com.android.betterway.utils.BlurUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ScreenShotUtil;
+import com.android.betterway.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -58,10 +64,8 @@ import io.reactivex.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity implements MainView {
 
     private static final String TAG = "MainActivity";
-
-
-    @Inject
-    MainPresenterImpel mMainPresenterImpel;
+    private MainPresenterImpel mMainPresenterImpel;
+    private List<WeakReference<Activity>> mWeakReferenceList = new ArrayList<WeakReference<Activity>>();
 
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
@@ -90,10 +94,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
         LogUtil.v(TAG, "onCreate");
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        DaggerMainActivityComponent.builder()
+        MainActivityComponent mainActivityComponent = DaggerMainActivityComponent.builder()
                 .mainPresenterImpelModule(new MainPresenterImpelModule(this))
-                .build()
-                .inject(this);
+                .build();
+        mainActivityComponent.inject(this);
+        mMainPresenterImpel = mainActivityComponent.getMainPresenterImpel();
         init();
     }
 
@@ -141,12 +146,14 @@ public class MainActivity extends AppCompatActivity implements MainView {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        LogUtil.v(TAG, "onOptionsItemSelected");
         switch (item.getItemId()) {
             case R.id.setting:
                 LogUtil.d(TAG, "click setting");
-                Intent intent = new Intent(getApplicationContext(), SettingActivity.class);
-                startActivity(intent);
+                if(mMainPresenterImpel == null) {
+                    ToastUtil.show(getApplicationContext(), "error");
+                } else {
+                    mMainPresenterImpel.getSet();
+                }
                 break;
             default:
                 break;
@@ -154,6 +161,18 @@ public class MainActivity extends AppCompatActivity implements MainView {
         return true;
     }
 
+    @Override
+    public Activity getActivity() {
+        if (mWeakReferenceList.size() == 0) {
+            WeakReference<Activity> weakReference = new WeakReference<Activity>(this);
+            mWeakReferenceList.add(weakReference);
+            return weakReference.get();
+        } else {
+            WeakReference<Activity> weakReference = mWeakReferenceList.get(0);
+            LogUtil.v(TAG, "list woeked!");
+            return weakReference.get();
+        }
+    }
 
     @Override
     public void enterSchedule() {
@@ -209,12 +228,11 @@ public class MainActivity extends AppCompatActivity implements MainView {
      */
     private void showBlurBackground(ButtonSwith buttonSwith) {
         if (buttonSwith == ButtonSwith.OPEN) {
-            final WeakReference reference = new WeakReference(this);
             Observable.create(new ObservableOnSubscribe<Drawable>() {
                 @Override
                 public void subscribe(@NonNull ObservableEmitter<Drawable> e) throws Exception {
                     Bitmap compressedBitmap = BitmapCompress
-                            .compressScale(ScreenShotUtil.shot((Activity) reference.get()));
+                            .compressScale(ScreenShotUtil.shot(getActivity()));
                     Bitmap blurBitmap = BlurUtil.blur(compressedBitmap);
                     Drawable drawable = new BitmapDrawable(blurBitmap);
                     e.onNext(drawable);

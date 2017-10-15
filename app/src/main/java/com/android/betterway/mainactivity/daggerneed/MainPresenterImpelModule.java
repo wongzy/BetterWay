@@ -32,7 +32,7 @@ public class MainPresenterImpelModule {
      * @return 提供创建MainPresenterImpel的MainView
      */
     @Provides
-    MainView provideMainVew() {
+    MainView provideMainView() {
         return mMainView;
     }
 }

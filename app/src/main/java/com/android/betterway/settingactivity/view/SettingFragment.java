@@ -1,28 +1,32 @@
-package com.android.betterway.settingactivity;
+package com.android.betterway.settingactivity.view;
 
 
 import android.Manifest;
-import android.annotation.TargetApi;
-import android.content.ContentUris;
+import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.SwitchPreference;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
 
 import com.android.betterway.R;
+import com.android.betterway.settingactivity.daggerneed.DaggerSettingFragmentComponent;
+import com.android.betterway.settingactivity.daggerneed.SettingFragmentComponent;
+import com.android.betterway.settingactivity.daggerneed.SettingFragmentModule;
+import com.android.betterway.settingactivity.presenter.SettingPresenterImpel;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+
+import java.lang.ref.SoftReference;
+import java.util.ArrayList;
+import java.util.List;
 
 
 import io.reactivex.Observable;
@@ -36,16 +40,21 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 设置界面碎片
  */
-public class SettingFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener,
+public class SettingFragment extends PreferenceFragment implements SettingView, Preference.OnPreferenceClickListener,
         Preference.OnPreferenceChangeListener {
 
     private static final int IMAGE_ROUTE = 1;
     private static final String TAG = "SettingFragment";
+    private static final String PREFERENCE = "Setting";
     private static final int VERSION = 19;
+    private SettingPresenterImpel mSettingPresenterImpel;
     SwitchPreference useDefault;
     SwitchPreference useLocal;
     SwitchPreference useOnline;
     Preference imageLocation;
+    ListPreference warnDuration;
+    ListPreference updateDuration;
+    private List<SoftReference<Activity>>  mSoftReferenceList = new ArrayList<SoftReference<Activity>>();
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,24 +63,34 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
         useDefault = (SwitchPreference) findPreference("use_default_image");
         useLocal = (SwitchPreference) findPreference("use_local_image");
         useOnline = (SwitchPreference) findPreference("update_image_online");
-        imageLocation = (Preference) findPreference("local_image_location");
+        imageLocation = findPreference("local_image_location");
+        warnDuration = (ListPreference) findPreference("warning_time");
+        updateDuration = (ListPreference) findPreference("update_duration");
         useDefault.setOnPreferenceClickListener(this);
         useLocal.setOnPreferenceClickListener(this);
         useOnline.setOnPreferenceClickListener(this);
         imageLocation.setOnPreferenceClickListener(this);
+        warnDuration.setOnPreferenceChangeListener(this);
+        updateDuration.setOnPreferenceChangeListener(this);
+        warnDuration.setSummary(warnDuration.getEntry());
+        updateDuration.setSummary(updateDuration.getEntry());
+        SettingFragmentComponent settingFragmentComponent = DaggerSettingFragmentComponent.builder()
+                .settingFragmentModule(new SettingFragmentModule(this))
+                .build();
+        settingFragmentComponent.inject(this);
+        mSettingPresenterImpel = settingFragmentComponent.getSettingPresenterImpel();
         initData();
     }
-
     /**
      * 初始化summary
      */
     private void initData() {
+        LogUtil.v(TAG, "iniData");
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
-                SharedPreferences data = getPreferenceManager().getSharedPreferences();
-                String imagePath = data.getString("Image_path", "无");
-                e.onNext(imagePath);
+                String data = mSettingPresenterImpel.getStringData("Image_path");
+                e.onNext(data);
                 e.onComplete();
             }
         }).subscribeOn(Schedulers.io())
@@ -83,6 +102,20 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                     }
                 });
     }
+
+    @Override
+    public Activity getSettingActivity() {
+        if (mSoftReferenceList.size() == 0) {
+            SoftReference<Activity> softReference = new SoftReference<>(getActivity());
+            mSoftReferenceList.add(softReference);
+            return softReference.get();
+        } else {
+            SoftReference<Activity> softReference = mSoftReferenceList.get(0);
+            return softReference.get();
+        }
+
+    }
+
     @Override
     public boolean onPreferenceClick(Preference preference) {
         switch (preference.getKey()) {
@@ -140,13 +173,11 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
                 String imagePath = null;
                 if (Build.VERSION.SDK_INT >= VERSION) {
-                    imagePath = handleImageOnKitKat(data);
+                    imagePath = mSettingPresenterImpel.handleImageOnKitKat(data);
                 } else {
-                    imagePath = handleImageBeforeKitKat(data);
+                    imagePath = mSettingPresenterImpel.handleImageBeforeKitKat(data);
                 }
-                SharedPreferences.Editor editor = getPreferenceManager().getSharedPreferences().edit();
-                editor.putString("Image_path", imagePath);
-                editor.apply();
+                mSettingPresenterImpel.putStringData("Image_path", imagePath);
                 e.onNext(imagePath);
                 e.onComplete();
             }
@@ -160,69 +191,21 @@ public class SettingFragment extends PreferenceFragment implements Preference.On
                 });
     }
 
-    /**
-     * api19及之后的处理方法
-     * @param data 传入的数据
-     * @return 图片路径
-     */
-    @TargetApi(19)
-    private String handleImageOnKitKat(Intent data) {
-        LogUtil.d(TAG, "handleImageOnkitKat");
-        String imagePath = null;
-        Uri uri = data.getData();
-        if (DocumentsContract.isDocumentUri(getActivity().getApplicationContext(), uri)) {
-            //如果是document类型的Uri，则通过documentid处理
-            String docId = DocumentsContract.getDocumentId(uri);
-            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
-                String id = docId.split(":")[1]; //解析出数字格式的id
-                String selection = MediaStore.Images.Media._ID + '=' + id;
-                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
-            } else if ("com.android.providers.downloads.documents".equals(uri.getAuthority())) {
-                Uri contenUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"),
-                        Long.valueOf(docId));
-                imagePath = getImagePath(contenUri, null);
-            }
-        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-            imagePath = getImagePath(uri, null);
-        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            imagePath = uri.getPath();
-        }
-        return imagePath;
-    }
 
-    /**
-     * 在api19前的处理方法
-     * @param data 传入的数据
-     * @return 图片路径
-     */
-    private String handleImageBeforeKitKat(Intent data) {
-        LogUtil.d(TAG, "handleImagebeforeKitKat");
-        Uri uri = data.getData();
-        return getImagePath(uri, null);
-    }
 
-    /**
-     * 获得图片的存储路径
-     * @param uri 返回的uri
-     * @param selection 类型
-     * @return 图片路径
-     */
-    private String getImagePath(Uri uri, String selection) {
-        LogUtil.d(TAG, "getImagePath");
-        String path = null;
-        //通过Uri和selection来获取真实的图片路径
-        Cursor cursor = getActivity().getContentResolver().query(uri, null, selection, null, null);
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                path = cursor.getString(cursor.getColumnIndex(MediaStore.Images.Media.DATA));
-            }
-            cursor.close();
-        }
-        return path;
-    }
 
     @Override
     public boolean onPreferenceChange(Preference preference, Object newValue) {
-        return false;
+        if (preference instanceof ListPreference) {
+            //把preference这个Preference强制转化为ListPreference类型
+            ListPreference listPreference = (ListPreference) preference;
+            //获取ListPreference中的实体内容
+            CharSequence[] entries = listPreference.getEntries();
+            //获取ListPreference中的实体内容的下标值
+            int index = listPreference.findIndexOfValue((String) newValue);
+            //把listPreference中的摘要显示为当前ListPreference的实体内容中选择的那个项目
+            listPreference.setSummary(entries[index]);
+        }
+        return true;
     }
 }

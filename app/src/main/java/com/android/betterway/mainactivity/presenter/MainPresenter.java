@@ -5,7 +5,7 @@ package com.android.betterway.mainactivity.presenter;
  * @version 1.0
  *          BetterWay
  */
- interface MainPresenter {
+  public interface MainPresenter {
     /**
      * 添加自定义行程
      */

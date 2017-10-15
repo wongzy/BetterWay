@@ -1,15 +1,11 @@
 package com.android.betterway.mainactivity.presenter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 
 import com.android.betterway.mainactivity.view.MainView;
-import com.android.betterway.settingactivity.SettingActivity;
-import com.android.betterway.utils.ToastUtil;
+import com.android.betterway.settingactivity.view.SettingActivity;
 
-import java.lang.ref.WeakReference;
 
 import javax.inject.Inject;
 
@@ -21,9 +17,12 @@ import javax.inject.Inject;
  */
 
 public class MainPresenterImpel implements MainPresenter {
+    private static final String TAG = "MainPresenterImpel";
+    private final MainView mMainView;
 
     @Inject
     public MainPresenterImpel(MainView mainView) {
+        mMainView = mainView;
     }
     @Override
     public void addNormalSchedule() {
@@ -35,6 +34,9 @@ public class MainPresenterImpel implements MainPresenter {
 
     @Override
     public void getSet() {
+        Activity activity = mMainView.getActivity();
+        Intent intent = new Intent(activity.getApplicationContext(), SettingActivity.class);
+        activity.startActivity(intent);
     }
 
     @Override

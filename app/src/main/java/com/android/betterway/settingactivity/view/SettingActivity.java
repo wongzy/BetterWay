@@ -1,16 +1,18 @@
-package com.android.betterway.settingactivity;
+package com.android.betterway.settingactivity.view;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
+import com.android.betterway.utils.LogUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
+import static android.content.ContentValues.TAG;
 public class SettingActivity extends AppCompatActivity {
+
     @BindView(R.id.toolbar_setting)
     Toolbar mToolbar;
 
@@ -20,6 +22,7 @@ public class SettingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_setting);
         ButterKnife.bind(this);
         init();
+        LogUtil.d(TAG, "fff");
     }
 
     /**

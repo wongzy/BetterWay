@@ -32,7 +32,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".settingactivity.SettingActivity">
+        <activity android:name=".settingactivity.view.SettingActivity">
         </activity>
     </application>
 
