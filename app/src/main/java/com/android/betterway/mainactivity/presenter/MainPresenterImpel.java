@@ -1,10 +1,17 @@
 package com.android.betterway.mainactivity.presenter;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
+import com.android.betterway.R;
+import com.android.betterway.data.MyDate;
+import com.android.betterway.mainactivity.model.MainModel;
 import com.android.betterway.mainactivity.view.MainView;
+import com.android.betterway.network.image.ImageDownload;
 import com.android.betterway.settingactivity.view.SettingActivity;
+import com.android.betterway.utils.TimeUtil;
 
 
 import javax.inject.Inject;
@@ -51,5 +58,29 @@ public class MainPresenterImpel implements MainPresenter {
     @Override
     public boolean isModalEmpty() {
         return false;
+    }
+
+    @Override
+    public String getUrl() {
+        Activity activity = mMainView.getActivity();
+        MainModel mainModel = MainModel.getInstance();
+        if (mainModel.getWeatherOn(activity, "use_default_image")) {
+            return "DEAFULT";
+        }
+        if (mainModel.getWeatherOn(activity, "use_local_image")) {
+            return mainModel.getUrl(activity, "Image_path");
+        }
+        if (mainModel.getWeatherOn(activity, "update_image_online")) {
+            SharedPreferences sharedPreferences = activity.
+                    getSharedPreferences("com.android.betterway_preferences", Context.MODE_PRIVATE);
+            int duration = Integer.parseInt(sharedPreferences.getString("update_duration", "1"));
+            MyDate myDate = TimeUtil.getDayTime();
+            MyDate lastDate = TimeUtil.IntToMyDate(sharedPreferences.getInt("downDate", 0));
+            if (TimeUtil.getDayDuration(lastDate, myDate) >= duration){
+                ImageDownload.downloadUrl(activity.getApplicationContext());
+            }
+            return mainModel.getUrl(activity, "OnlineImagePath");
+        }
+        return null;
     }
 }

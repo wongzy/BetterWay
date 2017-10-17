@@ -11,7 +11,7 @@
                         android:title="@string/waring_time_select"
                         android:summary="开启提醒则需要设置这项,默认为15分钟"
                         android:entries="@array/time"
-                        android:entryValues="@array/time"
+                        android:entryValues="@array/timevalue"
                         android:defaultValue="@string/time_default"
                         android:dialogTitle="请选择提前时间"/>
     </PreferenceCategory>
@@ -44,7 +44,7 @@
                         android:dependency="update_image_online"
                         android:title="@string/change_duration"
                         android:entries="@array/updatetime"
-                        android:entryValues="@array/updatetime"
+                        android:entryValues="@array/updatetimevalue"
                         android:summary="默认为一天更新一次"
                         android:defaultValue="@string/updatetime_default"
                         />

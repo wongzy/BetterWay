@@ -1,5 +1,7 @@
 package com.android.betterway.mainactivity.presenter;
 
+import com.android.betterway.utils.TimeUtil;
+
 /**
  * @author Jackdow
  * @version 1.0
@@ -38,4 +40,10 @@ package com.android.betterway.mainactivity.presenter;
      * @return 是否为空
      */
     boolean isModalEmpty();
+
+  /**
+   * 获得图片的地址
+   * @return 图片的地址
+   */
+    String getUrl();
 }

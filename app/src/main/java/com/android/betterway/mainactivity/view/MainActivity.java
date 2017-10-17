@@ -1,8 +1,7 @@
 package com.android.betterway.mainactivity.view;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,35 +15,31 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageSwitcher;
 import android.widget.ImageView;
-import android.widget.ViewSwitcher;
 
 import com.android.betterway.R;
+import com.android.betterway.data.MyDate;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.myview.FloatingActionButtonMenu;
+import com.android.betterway.network.image.ImageDownload;
 import com.android.betterway.other.ButtonSwith;
-import com.android.betterway.settingactivity.view.SettingActivity;
-import com.android.betterway.settingactivity.view.SettingFragment;
 import com.android.betterway.utils.BitmapCompress;
 import com.android.betterway.utils.BlurUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ScreenShotUtil;
+import com.android.betterway.utils.TimeUtil;
 import com.android.betterway.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.lang.ref.SoftReference;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,7 +56,7 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * 主界面
  */
-public class MainActivity extends AppCompatActivity implements MainView {
+public class MainActivity extends AppCompatActivity implements MainView, View.OnTouchListener {
 
     private static final String TAG = "MainActivity";
     private MainPresenterImpel mMainPresenterImpel;
@@ -80,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
     @BindView(R.id.floatingActionButtonMenu)
     FloatingActionButtonMenu mFloatingActionButtonMenu;
     @BindView(R.id.app_bar_image)
-    ImageSwitcher mAppBarImage;
+    ImageView mAppBarImage;
 
     @Override
     protected void onStart() {
@@ -125,16 +120,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
                 return false;
             }
         });
-        mAppBarImage.setFactory(new ViewSwitcher.ViewFactory() {
-            @Override
-            public View makeView() {
-                LogUtil.v(TAG, "init ImageSwitcher");
-                ImageView imageView = new ImageView(MainActivity.this);
-                imageView.setScaleType(ImageView.ScaleType.CENTER); //居中显示
-                return imageView;
-            }
-        });
-        mAppBarImage.setImageResource(R.drawable.bg);
+
     }
 
     @Override
@@ -149,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements MainView {
         switch (item.getItemId()) {
             case R.id.setting:
                 LogUtil.d(TAG, "click setting");
-                if(mMainPresenterImpel == null) {
+                if (mMainPresenterImpel == null) {
                     ToastUtil.show(getApplicationContext(), "error");
                 } else {
                     mMainPresenterImpel.getSet();

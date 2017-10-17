@@ -33,7 +33,17 @@ public interface SettingPresenter {
      */
     String getImagePath(Uri uri, String selection);
 
+    /**
+     * 获得字符串信息
+     * @param key 字符串信息对应的键值
+     * @return 字符串信息
+     */
     String getStringData(String key);
 
+    /**
+     * 存放入字符串信息
+     * @param key 字符串信息对应的键值
+     * @param data 字符串信息
+     */
     void putStringData(String key, String data);
 }

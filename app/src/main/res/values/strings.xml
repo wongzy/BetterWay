@@ -13,16 +13,26 @@
     <string name="weather_change_online">联网更新壁纸</string>
     <string name="change_duration">更新时间间隔</string>
     <string name="sharedPreferenceName">com.android.betterway_preferences</string>
-    <string name="time_default">5分钟</string>
+    <string name="time_default">5</string>
     <string-array name="time">
              <item >5分钟</item>
              <item>15分钟</item>
              <item>30分钟</item>
              <item>45分钟</item>
          </string-array>
-    <string name="updatetime_default">1天</string>
+    <string-array name="timevalue">
+        <item>5</item>
+        <item>15</item>
+        <item>30</item>
+        <item>45</item>
+    </string-array>
+    <string name="updatetime_default">1</string>
     <string-array name="updatetime">
         <item >1天</item>
         <item>7天</item>
+    </string-array>
+    <string-array name="updatetimevalue">
+        <item >1</item>
+        <item>7</item>
     </string-array>
 </resources>
