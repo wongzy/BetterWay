@@ -12,6 +12,10 @@ import com.android.betterway.settingactivity.model.SettingModel;
 import com.android.betterway.settingactivity.view.SettingView;
 import com.android.betterway.utils.LogUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 import javax.inject.Inject;
 
 import dagger.Module;
@@ -63,9 +67,9 @@ public class SettingPresenterImpel implements SettingPresenter {
             imagePath = getImagePath(contenUri, null);
         }
     } else if ("content".equalsIgnoreCase(uri.getScheme())) {
-        imagePath = getImagePath(uri, null);
+            imagePath = getImagePath(uri, null);
     } else if ("file".equalsIgnoreCase(uri.getScheme())) {
-        imagePath = uri.getPath();
+            imagePath = uri.getPath();
     }
         return imagePath;
 }

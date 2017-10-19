@@ -65,7 +65,7 @@ public class MainPresenterImpel implements MainPresenter {
         Activity activity = mMainView.getActivity();
         MainModel mainModel = MainModel.getInstance();
         if (mainModel.getWeatherOn(activity, "use_default_image")) {
-            return "DEAFULT";
+            return "DEFAULT";
         }
         if (mainModel.getWeatherOn(activity, "use_local_image")) {
             return mainModel.getUrl(activity, "Image_path");
@@ -81,6 +81,6 @@ public class MainPresenterImpel implements MainPresenter {
             }
             return mainModel.getUrl(activity, "OnlineImagePath");
         }
-        return null;
+        return "NONE";
     }
 }

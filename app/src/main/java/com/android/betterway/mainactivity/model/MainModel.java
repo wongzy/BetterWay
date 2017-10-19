@@ -22,7 +22,7 @@ public final class MainModel {
      */
     public boolean getWeatherOn(Activity activity, String key) {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(key, false);
+        return sharedPreferences.getBoolean(key, true);
     }
 
     /**
@@ -33,7 +33,7 @@ public final class MainModel {
      */
     public String getUrl(Activity activity, String key) {
         SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
-        return sharedPreferences.getString(key, null);
+        return sharedPreferences.getString(key, "NONE");
     }
     public static MainModel getInstance() {
         return MainModelHolder.INSTANCE;
