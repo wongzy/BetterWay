@@ -1,4 +1,4 @@
-package com.android.betterway.settingactivity.view;
+package com.android.betterway.AutoScheduleActivity.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -6,29 +6,24 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
-import com.android.betterway.utils.LogUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import static android.content.ContentValues.TAG;
-public class SettingActivity extends AppCompatActivity {
 
-    @BindView(R.id.toolbar_setting)
-    Toolbar mToolbar;
+public class AutoScheduleActivity extends AppCompatActivity {
+
+    @BindView(R.id.toolbar_auto_schedule)
+    Toolbar mToolbarAutoSchedule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_setting);
+        setContentView(R.layout.activity_auto_schedule);
         ButterKnife.bind(this);
         init();
     }
-
-    /**
-     * 初始化
-     */
     private void init() {
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(mToolbarAutoSchedule);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }

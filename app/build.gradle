@@ -55,10 +55,11 @@ dependencies {
     compile 'org.greenrobot:eventbus:3.1.0-RC'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:support-v4:25.3.1'
+    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    compile 'com.android.support:palette-v7:25.3.1'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.2.0'
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
-    compile 'com.android.support:palette-v7:25.3.1'
+    compile 'com.contrarywind:Android-PickerView:3.2.6'
 }

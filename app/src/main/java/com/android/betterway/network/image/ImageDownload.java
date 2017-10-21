@@ -57,7 +57,6 @@ public final class ImageDownload {
                         LogUtil.d(TAG, BASE_URL + imageBean.getURL());
                         LogUtil.d(TAG, imageBean.getDate());
                     }
-
                     @Override
                     public void onError(Throwable t) {
                         t.printStackTrace();

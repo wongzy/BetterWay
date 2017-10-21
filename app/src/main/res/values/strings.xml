@@ -14,12 +14,15 @@
     <string name="change_duration">更新时间间隔</string>
     <string name="sharedPreferenceName">com.android.betterway_preferences</string>
     <string name="time_default">5</string>
+    <string name="datepicker_title">请选择日期</string>
+    <string name="button_sure">确定</string>
+    <string name="button_cancel">取消</string>
     <string-array name="time">
-             <item >5分钟</item>
-             <item>15分钟</item>
-             <item>30分钟</item>
-             <item>45分钟</item>
-         </string-array>
+        <item>5分钟</item>
+        <item>15分钟</item>
+        <item>30分钟</item>
+        <item>45分钟</item>
+    </string-array>
     <string-array name="timevalue">
         <item>5</item>
         <item>15</item>
@@ -28,11 +31,14 @@
     </string-array>
     <string name="updatetime_default">1</string>
     <string-array name="updatetime">
-        <item >1天</item>
+        <item>1天</item>
         <item>7天</item>
     </string-array>
     <string-array name="updatetimevalue">
-        <item >1</item>
+        <item>1</item>
         <item>7</item>
     </string-array>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

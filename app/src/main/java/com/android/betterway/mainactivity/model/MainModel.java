@@ -12,29 +12,34 @@ import android.content.SharedPreferences;
 
 public final class MainModel {
     private static final String PREFERENCE = "com.android.betterway_preferences";
+    private SharedPreferences sharedPreferences;
     private MainModel() {
+    }
+    public void setActivity(Activity activity) {
+        sharedPreferences = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
     }
     /**
      * 获得开关的信息
-     * @param activity 传入的活动引用
      * @param key 键值
      * @return 开关是否打开的信息
      */
-    public boolean getWeatherOn(Activity activity, String key) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+    public boolean getWeatherOn(String key) {
         return sharedPreferences.getBoolean(key, true);
     }
 
     /**
      * 获得图片地址信息
-     * @param activity 传入的活动引用
      * @param key 键值
      * @return 图片的地址信息
      */
-    public String getUrl(Activity activity, String key) {
-        SharedPreferences sharedPreferences = activity.getSharedPreferences(PREFERENCE, Context.MODE_PRIVATE);
+    public String getUrl(String key) {
         return sharedPreferences.getString(key, "NONE");
     }
+
+    /**
+     * 获得单例
+     * @return 单例
+     */
     public static MainModel getInstance() {
         return MainModelHolder.INSTANCE;
     }

@@ -1,12 +1,15 @@
 package com.android.betterway.mainactivity.view;
 
+import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.RecyclerView;
@@ -18,19 +21,21 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.android.betterway.AutoScheduleActivity.view.AutoScheduleActivity;
 import com.android.betterway.R;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
+import com.android.betterway.mainactivity.datepicker.DatePickerFragment;
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.myview.FloatingActionButtonMenu;
+import com.android.betterway.other.ActivityType;
 import com.android.betterway.other.ButtonSwith;
-import com.android.betterway.other.StatusBarCompat;
+import com.android.betterway.utils.StatusBarCompat;
 import com.android.betterway.utils.BitmapCompress;
 import com.android.betterway.utils.BlurUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ScreenShotUtil;
-import com.android.betterway.utils.ToastUtil;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -42,6 +47,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.PrimitiveIterator;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -122,52 +128,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
     @Override
     protected void onResume() {
         super.onResume();
-        Observable.create(new ObservableOnSubscribe<String>() {
-            @Override
-            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
-                e.onNext(mMainPresenterImpel.getUrl());
-                e.onComplete();
-            }
-        }).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<String>() {
-                    @Override
-                    public void accept(String s) throws Exception {
-                        switch (s) {
-                            case "DEFAULT":
-                                Glide.with(getApplicationContext()).load(R.drawable.bg).into(mAppBarImage);
-                                setThemeColor(primaryColor);
-                                break;
-                            case "NONE":
-                                Glide.with(getApplicationContext()).load(null).into(mAppBarImage);
-                                setThemeColor(primaryColor);
-                                break;
-                            default:
-                                Glide.with(getApplicationContext()).asBitmap().load(s)
-                                        .into(new SimpleTarget<Bitmap>() {
-                                            @Override
-                                            public void onResourceReady(final Bitmap resource,
-                                                                        final Transition<? super Bitmap> transition) {
-                                                mAppBarImage.setImageBitmap(resource);
-                                                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
-                                                    @Override
-                                                    public void onGenerated(Palette palette) {
-                                                            Palette.Swatch swatch = palette.getMutedSwatch();
-                                                        int color;
-                                                            if (swatch != null) {
-                                                                color = swatch.getRgb();
-                                                            } else {
-                                                                color = primaryColor;
-                                                            }
-                                                            setThemeColor(color);
-                                                    }
-                                                });
-                                            }
-                                        });
-                                break;
-                        }
-                    }
-                });
+        updateImage();
     }
 
     @Override
@@ -182,8 +143,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         if (mBlurFragment.getBackground() == null) {
             return false;
         }
-        mBlurFragment.setBackground(null);
-        mFloatingActionButtonMenu.closeMenu();
+        closeBlurBackground();
         return false;
     }
 
@@ -192,11 +152,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         switch (item.getItemId()) {
             case R.id.setting:
                 LogUtil.d(TAG, "click setting");
-                if (mMainPresenterImpel == null) {
-                    ToastUtil.show(getApplicationContext(), "error");
-                } else {
-                    mMainPresenterImpel.getSet();
-                }
+                mMainPresenterImpel.getSet();
                 break;
             default:
                 break;
@@ -229,12 +185,56 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
 
     @Override
     public void updateImage() {
-
+        Observable.create(new ObservableOnSubscribe<String>() {
+            @Override
+            public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
+                e.onNext(mMainPresenterImpel.getUrl());
+                e.onComplete();
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        switch (s) {
+                            case "DEFAULT":
+                                Glide.with(getApplicationContext()).load(R.drawable.bg).into(mAppBarImage);
+                                setThemeColor(primaryColor);
+                                break;
+                            case "NONE":
+                                Glide.with(getApplicationContext()).load(null).into(mAppBarImage);
+                                setThemeColor(primaryColor);
+                                break;
+                            default:
+                                Glide.with(getApplicationContext()).asBitmap().load(s)
+                                        .into(new SimpleTarget<Bitmap>() {
+                                            @Override
+                                            public void onResourceReady(final Bitmap resource,
+                                                                        final Transition<? super Bitmap> transition) {
+                                                mAppBarImage.setImageBitmap(resource);
+                                                Palette.from(resource).generate(new Palette.PaletteAsyncListener() {
+                                                    @Override
+                                                    public void onGenerated(Palette palette) {
+                                                        Palette.Swatch swatch = palette.getMutedSwatch();
+                                                        int color;
+                                                        if (swatch != null) {
+                                                            color = swatch.getRgb();
+                                                        } else {
+                                                            color = primaryColor;
+                                                        }
+                                                        setThemeColor(color);
+                                                    }
+                                                });
+                                            }
+                                        });
+                                break;
+                        }
+                    }
+                });
     }
 
     /**
      * 点击事件
-     *
      * @param view 传递点击事件的view
      */
     @OnClick({R.id.addAutoSchedule, R.id.addNormalSchedule})
@@ -243,11 +243,13 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         switch (view.getId()) {
             case R.id.addAutoSchedule:
                 LogUtil.d(TAG, "click addAutoSchedule");
-                mMainPresenterImpel.addAutoSchedule();
+                showDatePickerDialog(ActivityType.ADDAUTOACTIVITY);
+                closeBlurBackground();
                 break;
             case R.id.addNormalSchedule:
                 LogUtil.d(TAG, "click addNormalSchedule");
-                mMainPresenterImpel.addNormalSchedule();
+                showDatePickerDialog(ActivityType.ADDMORNALACTIVITY);
+                closeBlurBackground();
                 break;
             default:
                 break;
@@ -256,7 +258,6 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
 
     /**
      * EventBus接受事件
-     *
      * @param buttonSwith 获取开关状态
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -266,7 +267,6 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
 
     /**
      * 对所在界面截图
-     *
      * @param buttonSwith 接收的开关状态
      */
     private void showBlurBackground(ButtonSwith buttonSwith) {
@@ -306,5 +306,20 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
     private void setThemeColor(int mColor) {
         mNotificationBackground.setContentScrimColor(mColor);
         StatusBarCompat.compat(MainActivity.this, mColor);
+    }
+
+    /**
+     * 取消毛玻璃特效背景
+     */
+    private void closeBlurBackground() {
+        mBlurFragment.setBackground(null);
+        mFloatingActionButtonMenu.closeMenu();
+    }
+
+    private void showDatePickerDialog(ActivityType activityType) {
+        FragmentManager manager = getSupportFragmentManager();
+        DatePickerFragment datePickerFragment = new DatePickerFragment();
+        datePickerFragment.setActitityType(activityType);
+        datePickerFragment.show(manager, "DatePickerFragment");
     }
 }

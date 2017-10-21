@@ -29,7 +29,9 @@ public final class TimeUtil {
         return new MyDate(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
                 calendar.get(Calendar.DAY_OF_MONTH));
     }
-
+    public static long getDayLong() {
+        return new Date().getTime();
+    }
     /**
      * 获得当前时间（精确到分钟）
      * @return 当前时间
@@ -47,10 +49,10 @@ public final class TimeUtil {
      * @param endDate 结束日期
      * @return 相差天数（算上开始那天）
      */
-    public static long getDayDuration(MyDate startDate, MyDate endDate) {
+    public static int getDayDuration(MyDate startDate, MyDate endDate) {
         Date date1 = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDay());
         Date date2 = new Date(endDate.getYear(), endDate.getMonth(), endDate.getDay());
-        return (date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
+        return (int)(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
     }
 
     /**
@@ -98,5 +100,9 @@ public final class TimeUtil {
         dateInt -= month * 100;
         int day = dateInt;
         return new MyDate(year, month, day);
+    }
+    public static long MydateToLong(MyDate myDate) {
+        Date date = new Date(myDate.getYear(), myDate.getMonth(), myDate.getDay());
+        return date.getTime();
     }
 }

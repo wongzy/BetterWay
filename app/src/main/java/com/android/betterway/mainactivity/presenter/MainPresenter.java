@@ -1,5 +1,7 @@
 package com.android.betterway.mainactivity.presenter;
 
+import android.view.View;
+
 import com.android.betterway.utils.TimeUtil;
 
 /**
@@ -18,10 +20,10 @@ import com.android.betterway.utils.TimeUtil;
      */
     void addAutoSchedule();
 
-    /**
-     * 设置
-     */
-    void getSet();
+  /**
+   * 跳转到设置界面
+   */
+  void getSet();
 
     /**
      * 打开详细行程

@@ -1,4 +1,4 @@
-package com.android.betterway.other;
+package com.android.betterway.utils;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
