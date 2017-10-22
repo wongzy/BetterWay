@@ -1,0 +1,18 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="0dp"
+             android:layout_height="0dp"
+             tools:context="com.android.betterway.autoscheduleactivity.view.AutoScheduleAssistFragment">
+    <com.amap.api.maps2d.MapView
+        android:id="@+id/mapview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <TextView
+        android:id="@+id/location_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:layout_marginBottom="80dp"
+        android:text="@string/location_text_default"
+        android:textColor="@color/secondary_text"/>
+</FrameLayout>

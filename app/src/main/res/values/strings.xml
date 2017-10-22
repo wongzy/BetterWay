@@ -17,6 +17,9 @@
     <string name="datepicker_title">请选择日期</string>
     <string name="button_sure">确定</string>
     <string name="button_cancel">取消</string>
+    <string name="location_text_default">请选择地点</string>
+    <string name="finish_activity">完成</string>
+    <string name="clean_all">清空</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

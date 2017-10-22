@@ -1,8 +1,6 @@
 package com.android.betterway.mainactivity.view;
 
-import android.animation.ObjectAnimator;
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -21,7 +19,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.android.betterway.AutoScheduleActivity.view.AutoScheduleActivity;
 import com.android.betterway.R;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainActivityComponent;
@@ -47,7 +44,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.PrimitiveIterator;
 
 import butterknife.BindColor;
 import butterknife.BindView;

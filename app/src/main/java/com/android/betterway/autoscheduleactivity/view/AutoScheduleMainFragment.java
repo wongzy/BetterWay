@@ -1,4 +1,4 @@
-package com.android.betterway.AutoScheduleActivity.view;
+package com.android.betterway.autoscheduleactivity.view;
 
 
 import android.os.Bundle;

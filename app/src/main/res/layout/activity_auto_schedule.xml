@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.betterway.AutoScheduleActivity.view.AutoScheduleActivity">
+    tools:context="com.android.betterway.autoscheduleactivity.view.AutoScheduleActivity">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_auto_schedule"
@@ -15,4 +15,24 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"/>
-</LinearLayout>
+    <LinearLayout
+        android:layout_marginTop="?attr/actionBarSize"
+        android:orientation="vertical"
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <fragment
+            android:id="@+id/main_fragment"
+            android:name="com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_width="match_parent"/>
+        <fragment
+            android:id="@+id/assist_fragment"
+            android:name="com.android.betterway.autoscheduleactivity.view.AutoScheduleAssistFragment"
+            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"/>
+    </LinearLayout>
+
+</FrameLayout>

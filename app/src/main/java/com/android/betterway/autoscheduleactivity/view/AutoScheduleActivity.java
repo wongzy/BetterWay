@@ -1,11 +1,13 @@
-package com.android.betterway.AutoScheduleActivity.view;
+package com.android.betterway.autoscheduleactivity.view;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
+import com.android.betterway.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +24,7 @@ public class AutoScheduleActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         init();
     }
+
     private void init() {
         setSupportActionBar(mToolbarAutoSchedule);
         if (getSupportActionBar() != null) {
@@ -35,9 +38,21 @@ public class AutoScheduleActivity extends AppCompatActivity {
             case android.R.id.home:
                 finish();
                 break;
+            case R.id.finish_auto:
+                ToastUtil.show(getApplicationContext(), "Clicked finish");
+                break;
+            case R.id.clean_all:
+                ToastUtil.show(getApplicationContext(), "Clicked clean all");
+                break;
             default:
                 break;
         }
+        return true;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.add_auto_menu, menu);
         return true;
     }
 }
