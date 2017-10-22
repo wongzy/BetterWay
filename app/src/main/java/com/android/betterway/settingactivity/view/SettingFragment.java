@@ -143,6 +143,8 @@ public class SettingFragment extends PreferenceFragment implements SettingView, 
             case "local_image_location":
                 RxPermissions rxPermissions = new RxPermissions(getActivity());
                 rxPermissions.requestEach(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<Permission>() {
                             @Override
                             public void accept(Permission permission) throws Exception {

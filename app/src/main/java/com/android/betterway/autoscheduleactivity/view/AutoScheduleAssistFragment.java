@@ -148,7 +148,7 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
                 getContext(), new OptionsPickerView.OnOptionsSelectListener() {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
-                //返回的分别是三个级别的选中位置
+                //返回的分别是两个级别的选中位置
                 String city = options2Items.get(options1).get(options2);
                 String tx = options1Items.get(options1).getPickerViewText()
                         + options2Items.get(options1).get(options2);

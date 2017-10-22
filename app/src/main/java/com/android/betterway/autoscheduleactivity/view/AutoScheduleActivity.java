@@ -7,6 +7,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
+import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.ToastUtil;
 
 import butterknife.BindView;
@@ -23,6 +24,7 @@ public class AutoScheduleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_auto_schedule);
         ButterKnife.bind(this);
         init();
+        NetworkUtil.isNetworkConnected(getApplicationContext());
     }
 
     private void init() {

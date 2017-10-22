@@ -66,4 +66,10 @@ public class MyTime {
     public String getSingleTime() {
         return hour + ":" + minute;
     }
+    public String getDateTime() {
+        return year + "年" + month + "月" + day + "日";
+    }
+    public MyDate parseToMyDate() {
+        return new MyDate(year, month, day);
+    }
 }
