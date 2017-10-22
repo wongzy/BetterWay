@@ -3,7 +3,7 @@
     <color name="primary">#009688</color>
     <color name="primary_dark">#00796b</color>
     <color name="primary_light">#b2dfdb</color>
-    <color name="accent">#00BCD4</color>
+    <color name="accent">#00bcd4</color>
     <color name="transparent">#00000000</color><!--透明色 -->
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>

@@ -1,6 +1,8 @@
 package com.android.betterway.autoscheduleactivity.view;
 
 
+import android.Manifest;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,12 +12,25 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeAddress;
+import com.amap.api.services.geocoder.GeocodeQuery;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationBean;
 import com.android.betterway.utils.JsonUtil;
 import com.android.betterway.utils.LogUtil;
+import com.android.betterway.utils.ToastUtil;
 import com.bigkoo.pickerview.OptionsPickerView;
+import com.tbruyelle.rxpermissions2.Permission;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.ArrayList;
 
@@ -27,6 +42,7 @@ import butterknife.Unbinder;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
@@ -34,9 +50,10 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AutoScheduleAssistFragment extends Fragment {
+public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLocationChangeListener,
+        GeocodeSearch.OnGeocodeSearchListener {
     private static final String TAG = "AutoScheduleAssistFragment";
-    AMap aMap;
+    private AMap aMap;
     @BindView(R.id.location_text)
     TextView mLocationText;
     @BindColor(R.color.accent)
@@ -55,18 +72,24 @@ public class AutoScheduleAssistFragment extends Fragment {
         initJson();
     }
 
+    /**
+     * 初始化地图
+     */
     private void initMap() {
         if (aMap == null) {
             aMap = mMapview.getMap();
         }
+        aMap.getUiSettings().setZoomControlsEnabled(false);
+        aMap.setOnMyLocationChangeListener(this);
+        acquirePower();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_auto_schedule_assist, container, false);
-        mMapview.onCreate(savedInstanceState);
         unbinder = ButterKnife.bind(this, view);
+        mMapview.onCreate(savedInstanceState);
         initMap();
         return view;
     }
@@ -74,6 +97,7 @@ public class AutoScheduleAssistFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        mMapview.onDestroy();
         unbinder.unbind();
     }
 
@@ -125,9 +149,11 @@ public class AutoScheduleAssistFragment extends Fragment {
             @Override
             public void onOptionsSelect(int options1, int options2, int options3, View v) {
                 //返回的分别是三个级别的选中位置
+                String city = options2Items.get(options1).get(options2);
                 String tx = options1Items.get(options1).getPickerViewText()
                         + options2Items.get(options1).get(options2);
                 mLocationText.setText(tx);
+                doSearchGeo(tx, city);
             }
         })
                 .setSubmitText("确定")//确定按钮文字
@@ -167,6 +193,77 @@ public class AutoScheduleAssistFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mMapview.onDestroy();
+    }
+
+    /**
+     * 请求定位权限
+     */
+    private void acquirePower() {
+        RxPermissions rxPermissions = new RxPermissions(getActivity());
+        rxPermissions.requestEach(Manifest.permission.ACCESS_COARSE_LOCATION)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Permission>() {
+                    @Override
+                    public void accept(Permission permission) throws Exception {
+                        if (permission.granted) {
+                            // 用户已经同意该权限
+                            MyLocationStyle myLocationStyle;
+                            myLocationStyle = new MyLocationStyle();
+                            myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+                            myLocationStyle.showMyLocation(false);
+                            aMap.setMyLocationStyle(myLocationStyle); //设置定位蓝点的Style
+                            aMap.setMyLocationEnabled(true);
+                            aMap.moveCamera(CameraUpdateFactory.zoomTo(13));
+                        } else if (permission.shouldShowRequestPermissionRationale) {
+                            // 用户拒绝了该权限，那么下次再次启动时，还会提示请求权限的对话框
+                            ToastUtil.show(getContext(), "您已拒绝定位申请，无法定位到您的位置");
+                        } else {
+                            // 用户拒绝了该权限，并且选中『不再询问』，提醒用户手动打开权限
+                            ToastUtil.show(getContext(), "权限被拒绝，请在设置里面开启相应权限，否则将无法定位到您的位置");
+                        }
+                    }
+                });
+    }
+
+    @Override
+    public void onMyLocationChange(Location location) {
+        LogUtil.e(TAG, "onMyLocationChange");
+        GeocodeSearch geocoderSearch = new GeocodeSearch(getContext());
+        geocoderSearch.setOnGeocodeSearchListener(this);
+        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+        LatLonPoint latLonPoint = new LatLonPoint(location.getLatitude(), location.getLongitude());
+        RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 10000, GeocodeSearch.AMAP);
+        geocoderSearch.getFromLocationAsyn(query);
+    }
+
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        LogUtil.e(TAG, "onRegeocodeSearched");
+        String getLocation = regeocodeResult.getRegeocodeAddress().getProvince()
+                    + regeocodeResult.getRegeocodeAddress().getCity();
+        mLocationText.setText(getLocation);
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+        LogUtil.e(TAG, "onGeocodeSearched");
+        GeocodeAddress geocodeAddress = geocodeResult.getGeocodeAddressList().get(0);
+        LatLng latLng = new LatLng(geocodeAddress.getLatLonPoint().getLatitude(),
+                geocodeAddress.getLatLonPoint().getLongitude());
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(latLng));
+    }
+
+    /**
+     * 由城市名查询地理位置
+     * @param address 地址
+     * @param name 城市名字
+     */
+    private void doSearchGeo(String address, String name) {
+        GeocodeSearch geocoderSearch = new GeocodeSearch(getContext());
+        geocoderSearch.setOnGeocodeSearchListener(this);
+        GeocodeQuery query = new GeocodeQuery(address, name);
+        geocoderSearch.getFromLocationNameAsyn(query);
     }
 }
