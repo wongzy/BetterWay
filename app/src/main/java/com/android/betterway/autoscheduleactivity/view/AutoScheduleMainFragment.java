@@ -86,5 +86,6 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
         FragmentManager manager = getActivity().getSupportFragmentManager();
         LocationDialogFragment locationDialogFragment = new LocationDialogFragment();
         locationDialogFragment.show(manager, "locationDialogFragment");
+
     }
 }

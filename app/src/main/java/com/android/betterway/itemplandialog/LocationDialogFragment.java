@@ -2,12 +2,15 @@ package com.android.betterway.itemplandialog;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.graphics.Color;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +21,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import com.android.betterway.R;
 import com.android.betterway.data.MyTime;
+import com.android.betterway.itempickeractivity.ItemPickerActivity;
 import com.android.betterway.utils.TimeUtil;
-import com.bigkoo.pickerview.TimePickerView;
+import com.android.betterway.utils.ToastUtil;
 
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  * @author Jackdow
@@ -30,7 +32,7 @@ import java.util.Date;
  *          BetterWay
  */
 
-public class LocationDialogFragment extends DialogFragment implements View.OnClickListener{
+public class LocationDialogFragment extends DialogFragment implements View.OnClickListener {
     private Button mEditLocation;
     private EditText mThingStatement;
     private EditText mSpendMoney;
@@ -38,6 +40,14 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private EditText mSpendTime;
     private ViewGroup mViewGroup;
     private MyTime myTime;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setCancelable(false); //设置点击屏幕Dialog不消失
+
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
@@ -56,15 +66,32 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                 .setIcon(R.drawable.ic_action_item_dialog)
                 .setView(view)
                 .setTitle("请输入信息")
-                .setPositiveButton("确定", null)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (TextUtils.isEmpty(mEditLocation.getText())) {
+                            ToastUtil.show(getContext(), "未输入地点");
+                        } else if (TextUtils.isEmpty(mSpendTime.getText())) {
+                            ToastUtil.show(getContext(), "未输入消耗时间");
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                })
                 .setNegativeButton("取消", null);
         AlertDialog alertDialog = builder.create();
+        alertDialog.setOnCancelListener(null);
         if (alertDialog.getWindow() != null) {
             Window window = alertDialog.getWindow();
             window.setWindowAnimations(R.style.dialogAnim);
         }
         return alertDialog;
     }
+
+    /**
+     * 初始化控件
+     * @param view 容器view
+     */
     private void initView(View view) {
         mEditLocation = (Button) view.findViewById(R.id.edit_location);
         mThingStatement = (EditText) view.findViewById(R.id.thing_statement);
@@ -83,7 +110,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             case R.id.start_time:
                 BottomSheetDialog dialog = new BottomSheetDialog(getContext());
                 View view = LayoutInflater.from(getContext()).inflate(R.layout.clockpicker_dialog, null);
-                TimePicker timePicker = (TimePicker)view;
+                TimePicker timePicker = (TimePicker) view;
                 timePicker.setIs24HourView(true);
                 timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {
                     @Override
@@ -96,7 +123,17 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                 dialog.setContentView(view);
                 dialog.show();
                 break;
-            case R.id.spend_time:
+            case R.id.edit_location:
+                Intent intent = new Intent(getContext(), ItemPickerActivity.class);
+                startActivity(intent);
+                break;
+            default:
+                break;
         }
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        super.show(manager, tag);
     }
 }

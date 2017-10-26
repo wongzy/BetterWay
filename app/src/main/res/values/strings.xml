@@ -25,7 +25,10 @@
     <string name="input_thing">请输入事件内容简述</string>
     <string name="input_start_time">开始时间</string>
     <string name="input_spend_money">请输入消费金额</string>
-    <string name="input_spend_time">请输入耗费时间</string>
+    <string name="input_spend_time">请输入耗费时间（单位：分钟）</string>
+    <string name="input_keyword">请输入地点关键字</string>
+    <string name="test_name">武汉工程大学</string>
+    <string name="test_address">武汉市江夏区流芳大道特一号</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

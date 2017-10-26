@@ -118,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         LogUtil.d(TAG, "init");
         setSupportActionBar(mToolbar);
         mBlurFragment.setOnTouchListener(this);
-
     }
 
     @Override

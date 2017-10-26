@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
           package="com.android.betterway">
+
     <uses-permission android:name="android.permission.READ_CALENDAR"/>
     <!-- 允许程序打开网络套接字 -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -25,10 +26,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data android:name="com.amap.api.v2.apikey"
-                   android:value="884a555c7c2bdd06914425d35ee176f3">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="884a555c7c2bdd06914425d35ee176f3">
             //开发者申请的key
         </meta-data>
+
         <activity
             android:name=".mainactivity.view.MainActivity"
             android:launchMode="singleInstance">
@@ -43,6 +46,8 @@
         <activity android:name=".autoscheduleactivity.view.AutoScheduleActivity">
         </activity>
         <activity android:name=".NormalScheduleActivity.view.NormalScheduleActivity">
+        </activity>
+        <activity android:name=".itempickeractivity.ItemPickerActivity">
         </activity>
     </application>
 
