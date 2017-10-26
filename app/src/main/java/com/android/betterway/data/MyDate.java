@@ -43,4 +43,12 @@ public class MyDate {
     public String toString() {
         return year + "年" + month + "月" + day + "日";
     }
+
+    /**
+     * 获得当前的月日
+     * @return 返回日期
+     */
+    public String toSingleString() {
+        return month + "月" + day + "日";
+    }
 }

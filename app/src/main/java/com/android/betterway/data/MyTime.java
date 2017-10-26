@@ -64,11 +64,16 @@ public class MyTime {
         return year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
     }
     public String getSingleTime() {
-        return hour + ":" + minute;
+        return hour + ":" + (minute < 10 ? "0" + minute: minute);
     }
     public String getDateTime() {
         return year + "年" + month + "月" + day + "日";
     }
+
+    /**
+     *
+     * @return
+     */
     public MyDate parseToMyDate() {
         return new MyDate(year, month, day);
     }

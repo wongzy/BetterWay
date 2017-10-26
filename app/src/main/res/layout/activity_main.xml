@@ -34,19 +34,17 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
+                app:title="路书"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 />
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-
-
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior">
-
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
@@ -99,4 +97,5 @@
                 fab:elevation="5dp"/>
         </com.android.betterway.myview.FloatingActionButtonMenu>
     </FrameLayout>
+
 </android.support.design.widget.CoordinatorLayout>

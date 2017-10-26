@@ -20,6 +20,12 @@
     <string name="location_text_default">请选择地点</string>
     <string name="finish_activity">完成</string>
     <string name="clean_all">清空</string>
+    <string name="add_start_location">点击添加起点位置</string>
+    <string name="input_location">请输入地点</string>
+    <string name="input_thing">请输入事件内容简述</string>
+    <string name="input_start_time">开始时间</string>
+    <string name="input_spend_money">请输入消费金额</string>
+    <string name="input_spend_time">请输入耗费时间</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>
