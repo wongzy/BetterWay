@@ -35,6 +35,8 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     Unbinder unbinder;
     private AutoSchedulePresenterImpel mAutoSchedulePresenterImpel;
     private String searchLocation;
+    public static final int TRUECODE = 100;
+    public static final int WRONGCODE= 101;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

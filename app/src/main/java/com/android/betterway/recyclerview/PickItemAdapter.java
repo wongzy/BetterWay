@@ -47,7 +47,7 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_pick_item, parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_pick_item, parent, false);
         return new ViewHolder(view);
     }
 

@@ -60,6 +60,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/input_spend_time"
+                android:text="20"
                 android:inputType="number"
                 android:textColor="@color/primary_text"
                 android:textColorHighlight="@color/primary_light"/>

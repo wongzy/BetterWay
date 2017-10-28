@@ -3,6 +3,7 @@ package com.android.betterway.itempickeractivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +15,9 @@ import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.android.betterway.R;
+import com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment;
 import com.android.betterway.data.LocationItemBean;
+import com.android.betterway.recyclerview.PickItemAdapter;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
 
@@ -35,6 +38,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
     SearchView mPickitemSearch;
     private String searchCity;
     private List<LocationItemBean> mLocationItemBeanList = new ArrayList<LocationItemBean>();
+    private PickItemAdapter pickItemAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +60,11 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
         Intent intent = getIntent();
         searchCity = intent.getStringExtra("location");
         LogUtil.d("intent data", searchCity);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mPickitemRecyclerview.setLayoutManager(linearLayoutManager);
+        pickItemAdapter = new PickItemAdapter(mLocationItemBeanList);
+        mPickitemRecyclerview.setAdapter(pickItemAdapter);
     }
 
     @Override
@@ -69,19 +78,26 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        Intent intent = new Intent();
+        intent.putExtra("searched result", "None");
+        setResult(AutoScheduleMainFragment.WRONGCODE, intent);
+        this.finish();
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
+        LogUtil.e("onQueryTextChange", newText);
         if (!IsEmptyOrNullString(newText)) {
             InputtipsQuery inputquery = new InputtipsQuery(newText, searchCity);
-            Inputtips inputTips = new Inputtips(getApplicationContext(), inputquery);
+            inputquery.setCityLimit(true);
+            Inputtips inputTips = new Inputtips(this, inputquery);
             inputTips.setInputtipsListener(this);
             inputTips.requestInputtipsAsyn();
         } else {
-            if (mLocationItemBeanList.size() != 0) {
+            if (mLocationItemBeanList != null && pickItemAdapter != null) {
                 mLocationItemBeanList.clear();
+                pickItemAdapter.notifyDataSetChanged();
             }
         }
         return false;
@@ -94,8 +110,10 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public void onGetInputtips(final List<Tip> list, int i) {
+        LogUtil.e("onGetInputtips", list.size()+ " items");
         if (i == 1000) {
             for (int j = 0; j < list.size(); j++) {
+                LogUtil.e("dist", list.get(j).getDistrict());
                 LocationItemBean locationItemBean = new LocationItemBean();
                 Tip tip = list.get(j);
                 locationItemBean.setName(tip.getName());
@@ -103,6 +121,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
                 locationItemBean.setLatLonPoint(tip.getPoint());
                 mLocationItemBeanList.add(locationItemBean);
             }
+            pickItemAdapter.notifyDataSetChanged();
         } else {
             ToastUtil.show(this, "未找到相应地点");
         }
