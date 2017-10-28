@@ -17,6 +17,10 @@ import com.android.betterway.autoscheduleactivity.daggerneed.DaggerAutoScheduleM
 import com.android.betterway.autoscheduleactivity.present.AutoSchedulePresenterImpel;
 import com.android.betterway.itemplandialog.LocationDialogFragment;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -30,6 +34,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     Button mAddStartLocation;
     Unbinder unbinder;
     private AutoSchedulePresenterImpel mAutoSchedulePresenterImpel;
+    private String searchLocation;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -43,12 +48,32 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.ASYNC)
+    public void onLocationEvent(String location) {
+        searchLocation = location;
+    }
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_auto_schedule_main, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
     }
+
 
     @Override
     public void showRecyclerView() {
@@ -64,6 +89,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     public void notifyRecyclerView() {
 
     }
+
 
     @Override
     public void showButton() {
@@ -85,7 +111,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     public void onViewClicked() {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         LocationDialogFragment locationDialogFragment = new LocationDialogFragment();
+        locationDialogFragment.setSearchLocation(searchLocation);
         locationDialogFragment.show(manager, "locationDialogFragment");
-
     }
 }

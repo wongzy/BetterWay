@@ -32,6 +32,9 @@ import com.bigkoo.pickerview.OptionsPickerView;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 
 import butterknife.BindColor;
@@ -153,6 +156,7 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
                 String tx = options1Items.get(options1).getPickerViewText()
                         + options2Items.get(options1).get(options2);
                 mLocationText.setText(tx);
+                sendSearchLocation(city);
                 doSearchGeo(tx, city);
             }
         })
@@ -243,6 +247,7 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         LogUtil.e(TAG, "onRegeocodeSearched");
         String getLocation = regeocodeResult.getRegeocodeAddress().getProvince()
                     + regeocodeResult.getRegeocodeAddress().getCity();
+        sendSearchLocation(regeocodeResult.getRegeocodeAddress().getCity());
         mLocationText.setText(getLocation);
     }
 
@@ -265,5 +270,9 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         geocoderSearch.setOnGeocodeSearchListener(this);
         GeocodeQuery query = new GeocodeQuery(address, name);
         geocoderSearch.getFromLocationNameAsyn(query);
+    }
+
+    private void sendSearchLocation(String city) {
+        EventBus.getDefault().post(city);
     }
 }

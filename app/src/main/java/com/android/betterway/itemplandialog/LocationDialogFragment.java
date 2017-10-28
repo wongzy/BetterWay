@@ -40,12 +40,11 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private EditText mSpendTime;
     private ViewGroup mViewGroup;
     private MyTime myTime;
-
+    private String searchLocation;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.setCancelable(false); //设置点击屏幕Dialog不消失
-
     }
 
     @Nullable
@@ -125,11 +124,16 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                 break;
             case R.id.edit_location:
                 Intent intent = new Intent(getContext(), ItemPickerActivity.class);
+                intent.putExtra("location", searchLocation);
                 startActivity(intent);
                 break;
             default:
                 break;
         }
+    }
+
+    public void setSearchLocation(String searchLocation) {
+        this.searchLocation = searchLocation;
     }
 
     @Override
