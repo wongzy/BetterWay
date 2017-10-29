@@ -2,8 +2,6 @@ package com.android.betterway.mainactivity.view;
 
 
 import android.app.Activity;
-import android.content.Context;
-
 /**
  * @author Jackdow
  * @version 1.0

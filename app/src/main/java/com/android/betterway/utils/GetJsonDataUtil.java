@@ -14,6 +14,12 @@ import java.io.InputStreamReader;
  */
 
 public class GetJsonDataUtil {
+    /**
+     * 获得Json解析后的字符串
+     * @param context 上下文
+     * @param fileName 文件名字
+     * @return 字符串
+     */
     public String getJson(Context context, String fileName) {
 
         StringBuilder stringBuilder = new StringBuilder();

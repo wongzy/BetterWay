@@ -8,13 +8,15 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
-import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.ToastUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 自动生成路径的类
+ */
 public class AutoScheduleActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar_auto_schedule)
@@ -29,6 +31,9 @@ public class AutoScheduleActivity extends AppCompatActivity {
         NetworkUtil.isNetworkConnected(getApplicationContext());
     }
 
+    /**
+     * 初始化
+     */
     private void init() {
         setSupportActionBar(mToolbarAutoSchedule);
         if (getSupportActionBar() != null) {

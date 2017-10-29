@@ -3,7 +3,6 @@ package com.android.betterway.settingactivity.presenter;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.net.Uri;
-import android.preference.Preference;
 
 /**
  * @author Jackdow

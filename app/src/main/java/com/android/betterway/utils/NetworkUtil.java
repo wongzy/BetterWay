@@ -10,7 +10,9 @@ import android.net.NetworkInfo;
  *          BetterWay
  */
 
-public class NetworkUtil {
+public final class NetworkUtil {
+    private NetworkUtil() {
+    }
     /**
      * 判断当前是否有网络连接
      * @param context 获取context

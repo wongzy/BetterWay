@@ -18,13 +18,18 @@ public class SettingFragmentModule {
         mSettingView = settingView;
     }
 
+    /**
+     * 提供SettingPresenterImpel的方法
+     * @param settingView 构造必需的接口参数
+     * @return Impel对象
+     */
     @Provides
     SettingPresenterImpel provideSettingPresenterImpel(SettingView settingView) {
         return new SettingPresenterImpel(settingView);
     }
     /**
-     *
-     * @return
+     * 提供接口
+     * @return 接口
      */
     @Provides
     SettingView provideSettingView() {

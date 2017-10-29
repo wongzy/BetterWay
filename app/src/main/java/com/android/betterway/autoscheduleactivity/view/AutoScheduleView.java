@@ -1,6 +1,5 @@
 package com.android.betterway.autoscheduleactivity.view;
 
-import com.android.betterway.data.LocationPlan;
 
 /**
  * @author Jackdow

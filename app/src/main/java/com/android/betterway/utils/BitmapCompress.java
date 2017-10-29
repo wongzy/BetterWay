@@ -2,11 +2,8 @@ package com.android.betterway.utils;
 
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 
 /**
@@ -34,7 +31,7 @@ import java.io.ByteArrayOutputStream;
         canvas.drawBitmap(bmp, null, rect, null);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         // 把压缩后的数据存放到baos中
-        result.compress(Bitmap.CompressFormat.JPEG, 60 ,baos);
+        result.compress(Bitmap.CompressFormat.JPEG, 60, baos);
         return result;
     }
 }

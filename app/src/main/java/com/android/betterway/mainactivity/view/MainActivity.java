@@ -311,6 +311,10 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         mFloatingActionButtonMenu.closeMenu();
     }
 
+    /**
+     * 展示DialogFragment
+     * @param activityType 展示类型
+     */
     private void showDatePickerDialog(ActivityType activityType) {
         FragmentManager manager = getSupportFragmentManager();
         DatePickerFragment datePickerFragment = new DatePickerFragment();

@@ -22,14 +22,11 @@ import android.widget.TimePicker;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.android.betterway.R;
-import com.android.betterway.autoscheduleactivity.view.AutoScheduleAssistFragment;
-import com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment;
 import com.android.betterway.data.LocationItemBean;
 import com.android.betterway.data.MyTime;
 import com.android.betterway.itempickeractivity.ItemPickerActivity;
 import com.android.betterway.other.MapMarker;
 import com.android.betterway.utils.LogUtil;
-import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.TimeUtil;
 import com.android.betterway.utils.ToastUtil;
 
@@ -52,7 +49,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private MyTime myTime;
     private String searchLocation;
     public static final int TRUECODE = 100;
-    public static final int WRONGCODE= 101;
+    public static final int WRONGCODE = 101;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -168,10 +165,20 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             ToastUtil.show(getContext(), "未选择地点");
         }
     }
+
+    /**
+     * 发送选择地点的坐标
+     * @param latLonPoint 选择地点的坐标
+     */
     private void postLatlngPoint(LatLonPoint latLonPoint) {
         LogUtil.e("DialogFragment", "postLatlngPoint");
         EventBus.getDefault().postSticky(latLonPoint);
     }
+
+    /**
+     * 发送确定的信号，保存坐标
+     * @param mapMarker 信号
+     */
     private void postSureCode(MapMarker mapMarker) {
         LogUtil.e("DialogFragment", "PostSureCode");
         EventBus.getDefault().postSticky(mapMarker);

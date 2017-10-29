@@ -4,17 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.ActivityOptionsCompat;
-import android.view.View;
-
-import com.android.betterway.R;
 import com.android.betterway.data.MyDate;
 import com.android.betterway.mainactivity.model.MainModel;
 import com.android.betterway.mainactivity.view.MainView;
 import com.android.betterway.network.image.ImageDownload;
 import com.android.betterway.settingactivity.view.SettingActivity;
-import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
 
 
@@ -81,7 +75,7 @@ public class MainPresenterImpel implements MainPresenter {
             int duration = Integer.parseInt(sharedPreferences.getString("update_duration", "1"));
             MyDate myDate = TimeUtil.getDayTime();
             MyDate lastDate = TimeUtil.IntToMyDate(sharedPreferences.getInt("downDate", 0));
-            if (TimeUtil.getDayDuration(lastDate, myDate) >= duration){
+            if (TimeUtil.getDayDuration(lastDate, myDate) >= duration) {
                 ImageDownload.downloadUrl(activity.getApplicationContext());
             }
             return mainModel.getUrl("OnlineImagePath");

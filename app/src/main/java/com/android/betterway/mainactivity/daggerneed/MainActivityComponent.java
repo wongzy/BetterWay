@@ -3,8 +3,6 @@ package com.android.betterway.mainactivity.daggerneed;
 import android.app.Activity;
 
 import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
-import com.android.betterway.mainactivity.view.MainActivity;
-
 import dagger.Component;
 
 /**
@@ -20,5 +18,10 @@ public interface MainActivityComponent {
      * @param activity 依赖注入的活动实例
      */
     void inject(Activity activity);
+
+    /**
+     * 获得MainPresenterImpel的实例
+     * @return 实例
+     */
     MainPresenterImpel getMainPresenterImpel();
 }

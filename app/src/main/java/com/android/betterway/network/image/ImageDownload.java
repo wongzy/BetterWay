@@ -29,6 +29,7 @@ public final class ImageDownload {
     /**
      * 下载图的链接
      * 记录日期
+     * @param context 上下文
      */
     public static void downloadUrl(final Context context) {
         Retrofit retrofit = new Retrofit.Builder()
@@ -50,7 +51,8 @@ public final class ImageDownload {
                     @Override
                     public void onNext(ImageBean imageBean) {
                         LogUtil.v(TAG, "next");
-                        SharedPreferences.Editor editor = context.getSharedPreferences("com.android.betterway_preferences", Context.MODE_PRIVATE).edit();
+                        SharedPreferences.Editor editor = context
+                                .getSharedPreferences("com.android.betterway_preferences", Context.MODE_PRIVATE).edit();
                         editor.putString("OnlineImagePath", BASE_URL + imageBean.getURL());
                         editor.putInt("downDate", Integer.parseInt(imageBean.getDate()));
                         editor.apply();

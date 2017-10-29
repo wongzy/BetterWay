@@ -20,7 +20,7 @@ import java.util.List;
 
 public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHolder> {
     private List<LocationItemBean> mLocationItemBeanList;
-    private selectItem mSelectItem;
+    private SelectItem mSelectItem;
     /**
      * 内部ViewHolder类
      */
@@ -65,10 +65,19 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     public int getItemCount() {
         return mLocationItemBeanList.size();
     }
-    public void setSelectItem(selectItem selectItem) {
+    public void setSelectItem(SelectItem selectItem) {
         mSelectItem = selectItem;
     }
-    public interface selectItem {
+
+    /**
+     * 在活动中实现的接口
+     */
+    public interface SelectItem {
+        /**
+         * 在活动中定义的方法
+         * @param view view对象
+         * @param position item的位置
+         */
         void select(View view, int position);
     }
 }

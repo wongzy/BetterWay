@@ -15,14 +15,21 @@ import java.util.ArrayList;
  *          BetterWay
  */
 
-public class JsonUtil {
+public final class JsonUtil {
     private JsonUtil() {
     }
+
+    /**
+     * 将字符串转化为实体类
+     * @param context 上下文
+     * @param dataLocation 数据所在位置
+     * @return 实体类
+     */
     public static ArrayList<LocationBean> getJsonData(Context context, String dataLocation) {
-        String JsonData = new GetJsonDataUtil().getJson(context, dataLocation);//获取assets目录下的json文件数据
+        String jsonData = new GetJsonDataUtil().getJson(context, dataLocation); //获取assets目录下的json文件数据
         ArrayList<LocationBean> detail = new ArrayList<>();
         try {
-            JSONArray data = new JSONArray(JsonData);
+            JSONArray data = new JSONArray(jsonData);
             Gson gson = new Gson();
             for (int i = 0; i < data.length(); i++) {
                 LocationBean entity = gson.fromJson(data.optJSONObject(i).toString(), LocationBean.class);

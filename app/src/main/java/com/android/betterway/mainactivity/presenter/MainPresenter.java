@@ -1,8 +1,5 @@
 package com.android.betterway.mainactivity.presenter;
 
-import android.view.View;
-
-import com.android.betterway.utils.TimeUtil;
 
 /**
  * @author Jackdow

@@ -9,13 +9,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 
 import com.amap.api.services.help.Inputtips;
 import com.amap.api.services.help.InputtipsQuery;
 import com.amap.api.services.help.Tip;
 import com.android.betterway.R;
-import com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment;
 import com.android.betterway.data.LocationItemBean;
 import com.android.betterway.itemplandialog.LocationDialogFragment;
 import com.android.betterway.recyclerview.PickItemAdapter;
@@ -28,6 +26,9 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+/**
+ * 选择地点的类
+ */
 public class ItemPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
         Inputtips.InputtipsListener {
 
@@ -65,7 +66,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mPickitemRecyclerview.setLayoutManager(linearLayoutManager);
         pickItemAdapter = new PickItemAdapter(mLocationItemBeanList);
-        pickItemAdapter.setSelectItem(new PickItemAdapter.selectItem() {
+        pickItemAdapter.setSelectItem(new PickItemAdapter.SelectItem() {
             @Override
             public void select(View view, int position) {
                 selectItem(position);
@@ -95,7 +96,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
     @Override
     public boolean onQueryTextChange(String newText) {
         LogUtil.e("onQueryTextChange", newText);
-        if (!IsEmptyOrNullString(newText)) {
+        if (!isEmptyOrNullString(newText)) {
             InputtipsQuery inputquery = new InputtipsQuery(newText, searchCity);
             inputquery.setCityLimit(true);
             Inputtips inputTips = new Inputtips(this, inputquery);
@@ -113,7 +114,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public void onGetInputtips(final List<Tip> list, int i) {
-        LogUtil.e("onGetInputtips", list.size()+ " items");
+        LogUtil.e("onGetInputtips", list.size() + " items");
         if (i == 1000) {
             for (int j = 0; j < list.size(); j++) {
                 LogUtil.e("dist", list.get(j).getDistrict());
@@ -135,15 +136,19 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
      * @param s 需要判断的字符串
      * @return 是否为空
      */
-    private static boolean IsEmptyOrNullString(String s) {
+    private static boolean isEmptyOrNullString(String s) {
         return (s == null) || (s.trim().length() == 0);
     }
 
+    /**
+     * 选择地点
+     * @param position 选择地点的排列号
+     */
     private void selectItem(int position) {
         if (mLocationItemBeanList != null) {
-            LocationItemBean locationItemBean = mLocationItemBeanList.get(position);
+            LocationItemBean lociationItemBean = mLocationItemBeanList.get(position);
             Intent intent = new Intent();
-            intent.putExtra("getLocation", locationItemBean);
+            intent.putExtra("getLocation", lociationItemBean);
             setResult(LocationDialogFragment.TRUECODE, intent);
             this.finish();
         }

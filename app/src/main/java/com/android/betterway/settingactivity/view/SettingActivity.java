@@ -6,11 +6,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
-import com.android.betterway.utils.LogUtil;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import static android.content.ContentValues.TAG;
+
+/**
+ * 设置类
+ */
 public class SettingActivity extends AppCompatActivity {
 
     @BindView(R.id.toolbar_setting)

@@ -45,7 +45,7 @@
         </activity>
         <activity android:name=".autoscheduleactivity.view.AutoScheduleActivity">
         </activity>
-        <activity android:name=".NormalScheduleActivity.view.NormalScheduleActivity">
+        <activity android:name=".normalscheduleactivity.view.NormalScheduleActivity">
         </activity>
         <activity android:name=".itempickeractivity.ItemPickerActivity">
         </activity>

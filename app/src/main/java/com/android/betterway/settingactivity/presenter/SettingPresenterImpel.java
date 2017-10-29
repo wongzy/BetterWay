@@ -4,7 +4,6 @@ import android.content.ContentUris;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
-import android.preference.Preference;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 
@@ -12,20 +11,8 @@ import com.android.betterway.settingactivity.model.SettingModel;
 import com.android.betterway.settingactivity.view.SettingView;
 import com.android.betterway.utils.LogUtil;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 import javax.inject.Inject;
 
-import dagger.Module;
-import io.reactivex.Observable;
-import io.reactivex.ObservableEmitter;
-import io.reactivex.ObservableOnSubscribe;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -36,7 +23,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class SettingPresenterImpel implements SettingPresenter {
     private SettingView mSettingView;
-    private final static String TAG = "SettingPresenterImpel";
+    private static final String TAG = "SettingPresenterImpel";
     @Inject
     public SettingPresenterImpel(SettingView settingView) {
         mSettingView = settingView;
@@ -50,7 +37,7 @@ public class SettingPresenterImpel implements SettingPresenter {
     }
 
     @Override
-    public String handleImageOnKitKat(Intent data){
+    public String handleImageOnKitKat(Intent data) {
         LogUtil.d(TAG, "handleImageOnkitKat");
         String imagePath = null;
         Uri uri = data.getData();

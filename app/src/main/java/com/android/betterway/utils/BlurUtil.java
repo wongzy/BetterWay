@@ -24,7 +24,12 @@ import android.graphics.Bitmap;
     static {
         System.loadLibrary("native-lib");
     }
-    // 参数r为对bitmap虚化的程度范围
+
+    /**
+     * 模糊图片的jni方法
+     * @param bitmap 模糊的对象
+     * @param r 参数r为对bitmap虚化的程度范围
+     */
     static native void blurBitmap(Object bitmap, int r);
 }
 

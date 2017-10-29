@@ -292,6 +292,10 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         geocoderSearch.getFromLocationNameAsyn(query);
     }
 
+    /**
+     * 取得获得的坐标并移动地图到该坐标
+     * @param latLonPoint 获得的坐标
+     */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onLatLngPointEvent(LatLonPoint latLonPoint) {
         LogUtil.e(TAG, "moveToLatLngPoint()");
@@ -299,6 +303,10 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         aMap.moveCamera(CameraUpdateFactory.changeLatLng(mLatLng));
     }
 
+    /**
+     * 记录获得点的坐标
+     * @param mapMarker 记录的信号
+     */
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     public void onIntEvent(MapMarker mapMarker) {
         LogUtil.e(TAG, "addToMap()");
@@ -308,6 +316,11 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
             mLatLngList.add(mLatLng);
         }
     }
+
+    /**
+     * 发送选择的城市
+     * @param city 选择的城市
+     */
     private void sendSearchLocation(String city) {
         EventBus.getDefault().post(city);
     }

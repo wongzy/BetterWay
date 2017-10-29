@@ -5,6 +5,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.android.betterway.NormalScheduleActivity.view.NormalScheduleActivity">
+    tools:context="com.android.betterway.normalscheduleactivity.view.NormalScheduleActivity">
 
 </android.support.constraint.ConstraintLayout>

@@ -52,7 +52,7 @@ public final class TimeUtil {
     public static int getDayDuration(MyDate startDate, MyDate endDate) {
         Date date1 = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDay());
         Date date2 = new Date(endDate.getYear(), endDate.getMonth(), endDate.getDay());
-        return (int)(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
+        return (int) (date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
     }
 
     /**
@@ -93,7 +93,7 @@ public final class TimeUtil {
      * @param dateInt int格式的日期
      * @return Mydate格式的日期
      */
-    public static MyDate IntToMyDate(int dateInt){
+    public static MyDate intToMyDate(int dateInt) {
         int year = dateInt / 10000;
         dateInt -= year * 10000;
         int month = dateInt / 100;
@@ -101,7 +101,13 @@ public final class TimeUtil {
         int day = dateInt;
         return new MyDate(year, month, day);
     }
-    public static long MydateToLong(MyDate myDate) {
+
+    /**
+     * 将日期类转化为long格式
+     * @param myDate 日期类
+     * @return long
+     */
+    public static long mydateToLong(MyDate myDate) {
         Date date = new Date(myDate.getYear(), myDate.getMonth(), myDate.getDay());
         return date.getTime();
     }

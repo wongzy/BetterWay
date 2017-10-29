@@ -67,6 +67,11 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
             EventBus.getDefault().unregister(this);
         }
     }
+
+    /**
+     * 获得选择的城市并记录
+     * @param location 选择的城市
+     */
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onLocationEvent(String location) {
         searchLocation = location;
@@ -112,6 +117,9 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
         unbinder.unbind();
     }
 
+    /**
+     * 点击添加之后的操作
+     */
     @OnClick(R.id.add_start_location)
     public void onViewClicked() {
         if (searchLocation == null) {
