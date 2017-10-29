@@ -1,5 +1,8 @@
 package com.android.betterway.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.amap.api.services.core.LatLonPoint;
 
 /**
@@ -8,7 +11,7 @@ import com.amap.api.services.core.LatLonPoint;
  *          BetterWay
  */
 
-public class LocationItemBean {
+public class LocationItemBean implements Parcelable{
     LatLonPoint mLatLonPoint;
     String name;
     String address;
@@ -36,4 +39,31 @@ public class LocationItemBean {
     public void setAddress(String address) {
         this.address = address;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeValue(mLatLonPoint);
+        dest.writeString(name);
+        dest.writeString(address);
+    }
+    public static final Parcelable.Creator<LocationItemBean> CREATOR = new Parcelable.Creator<LocationItemBean>() {
+        @Override
+        public LocationItemBean createFromParcel(Parcel source) {
+            LocationItemBean locationItemBean = new LocationItemBean();
+            locationItemBean.mLatLonPoint = (LatLonPoint) source.readValue(LatLonPoint.class.getClassLoader());
+            locationItemBean.name = source.readString();
+            locationItemBean.address = source.readString();
+            return locationItemBean;
+        }
+
+        @Override
+        public LocationItemBean[] newArray(int size) {
+            return new LocationItemBean[size];
+        }
+    };
 }

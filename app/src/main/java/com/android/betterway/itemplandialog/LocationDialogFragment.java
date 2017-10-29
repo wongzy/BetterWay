@@ -19,11 +19,21 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+
+import com.amap.api.services.core.LatLonPoint;
 import com.android.betterway.R;
+import com.android.betterway.autoscheduleactivity.view.AutoScheduleAssistFragment;
+import com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment;
+import com.android.betterway.data.LocationItemBean;
 import com.android.betterway.data.MyTime;
 import com.android.betterway.itempickeractivity.ItemPickerActivity;
+import com.android.betterway.other.MapMarker;
+import com.android.betterway.utils.LogUtil;
+import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.TimeUtil;
 import com.android.betterway.utils.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 
 /**
@@ -41,6 +51,8 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private ViewGroup mViewGroup;
     private MyTime myTime;
     private String searchLocation;
+    public static final int TRUECODE = 100;
+    public static final int WRONGCODE= 101;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,6 +85,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                         } else if (TextUtils.isEmpty(mSpendTime.getText())) {
                             ToastUtil.show(getContext(), "未输入消耗时间");
                         } else {
+                            postSureCode(MapMarker.ADD);
                             dialog.dismiss();
                         }
                     }
@@ -125,7 +138,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             case R.id.edit_location:
                 Intent intent = new Intent(getContext(), ItemPickerActivity.class);
                 intent.putExtra("location", searchLocation);
-                startActivity(intent);
+                startActivityForResult(intent, TRUECODE);
                 break;
             default:
                 break;
@@ -139,5 +152,28 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     @Override
     public void show(FragmentManager manager, String tag) {
         super.show(manager, tag);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        LogUtil.e("LocationDialogFragment", "onActivityResult()");
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == TRUECODE && data != null) {
+            LocationItemBean locationItemBean = data.getParcelableExtra("getLocation");
+            mEditLocation.setText(locationItemBean.getName());
+            postLatlngPoint(locationItemBean.getLatLonPoint());
+        } else if (resultCode == WRONGCODE) {
+            ToastUtil.show(getContext(), "请选择一个精确的地点");
+        } else {
+            ToastUtil.show(getContext(), "未选择地点");
+        }
+    }
+    private void postLatlngPoint(LatLonPoint latLonPoint) {
+        LogUtil.e("DialogFragment", "postLatlngPoint");
+        EventBus.getDefault().postSticky(latLonPoint);
+    }
+    private void postSureCode(MapMarker mapMarker) {
+        LogUtil.e("DialogFragment", "PostSureCode");
+        EventBus.getDefault().postSticky(mapMarker);
     }
 }

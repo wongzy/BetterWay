@@ -15,6 +15,8 @@ import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeAddress;
@@ -25,6 +27,7 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationBean;
+import com.android.betterway.other.MapMarker;
 import com.android.betterway.utils.JsonUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
@@ -34,8 +37,10 @@ import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -56,7 +61,10 @@ import io.reactivex.schedulers.Schedulers;
 public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLocationChangeListener,
         GeocodeSearch.OnGeocodeSearchListener {
     private static final String TAG = "AutoScheduleAssistFragment";
+    public static final int ADDTOMAP = 64;
     private AMap aMap;
+    private LatLng mLatLng;
+    private List<LatLng> mLatLngList = new ArrayList<LatLng>();
     @BindView(R.id.location_text)
     TextView mLocationText;
     @BindColor(R.color.accent)
@@ -73,6 +81,18 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initJson();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        EventBus.getDefault().unregister(this);
     }
 
     /**
@@ -272,6 +292,22 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         geocoderSearch.getFromLocationNameAsyn(query);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onLatLngPointEvent(LatLonPoint latLonPoint) {
+        LogUtil.e(TAG, "moveToLatLngPoint()");
+        mLatLng = new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude());
+        aMap.moveCamera(CameraUpdateFactory.changeLatLng(mLatLng));
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onIntEvent(MapMarker mapMarker) {
+        LogUtil.e(TAG, "addToMap()");
+        if (mapMarker == MapMarker.ADD) {
+            Marker marker = aMap.addMarker(new MarkerOptions());
+            marker.setPosition(mLatLng);
+            mLatLngList.add(mLatLng);
+        }
+    }
     private void sendSearchLocation(String city) {
         EventBus.getDefault().post(city);
     }

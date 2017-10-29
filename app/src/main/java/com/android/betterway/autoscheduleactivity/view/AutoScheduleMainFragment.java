@@ -16,11 +16,13 @@ import com.android.betterway.autoscheduleactivity.daggerneed.AutoSchedulePresent
 import com.android.betterway.autoscheduleactivity.daggerneed.DaggerAutoScheduleMainFragmentComponent;
 import com.android.betterway.autoscheduleactivity.present.AutoSchedulePresenterImpel;
 import com.android.betterway.itemplandialog.LocationDialogFragment;
+import com.android.betterway.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -32,11 +34,12 @@ import butterknife.Unbinder;
 public class AutoScheduleMainFragment extends Fragment implements AutoScheduleView {
     @BindView(R.id.add_start_location)
     Button mAddStartLocation;
+    @BindString(R.string.location_text_default)
+    String defaultString;
+
     Unbinder unbinder;
     private AutoSchedulePresenterImpel mAutoSchedulePresenterImpel;
     private String searchLocation;
-    public static final int TRUECODE = 100;
-    public static final int WRONGCODE= 101;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,9 +114,17 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
 
     @OnClick(R.id.add_start_location)
     public void onViewClicked() {
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        LocationDialogFragment locationDialogFragment = new LocationDialogFragment();
-        locationDialogFragment.setSearchLocation(searchLocation);
-        locationDialogFragment.show(manager, "locationDialogFragment");
+        if (searchLocation == null) {
+            ToastUtil.show(getContext(), "请选择地点");
+            return;
+        }
+        if (searchLocation.equals(defaultString)) {
+            ToastUtil.show(getContext(), "请选择地点");
+        } else {
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            LocationDialogFragment locationDialogFragment = new LocationDialogFragment();
+            locationDialogFragment.setSearchLocation(searchLocation);
+            locationDialogFragment.show(manager, "locationDialogFragment");
+        }
     }
 }

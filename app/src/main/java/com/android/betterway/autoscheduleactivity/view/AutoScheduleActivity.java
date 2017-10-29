@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
+import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.ToastUtil;
 

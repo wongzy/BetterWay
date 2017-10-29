@@ -17,6 +17,7 @@ import com.amap.api.services.help.Tip;
 import com.android.betterway.R;
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleMainFragment;
 import com.android.betterway.data.LocationItemBean;
+import com.android.betterway.itemplandialog.LocationDialogFragment;
 import com.android.betterway.recyclerview.PickItemAdapter;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
@@ -28,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ItemPickerActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
-        Inputtips.InputtipsListener, AdapterView.OnItemClickListener{
+        Inputtips.InputtipsListener {
 
     @BindView(R.id.pickitem_toolbar)
     Toolbar mPickitemToolbar;
@@ -64,6 +65,12 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mPickitemRecyclerview.setLayoutManager(linearLayoutManager);
         pickItemAdapter = new PickItemAdapter(mLocationItemBeanList);
+        pickItemAdapter.setSelectItem(new PickItemAdapter.selectItem() {
+            @Override
+            public void select(View view, int position) {
+                selectItem(position);
+            }
+        });
         mPickitemRecyclerview.setAdapter(pickItemAdapter);
     }
 
@@ -80,7 +87,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
     public boolean onQueryTextSubmit(String query) {
         Intent intent = new Intent();
         intent.putExtra("searched result", "None");
-        setResult(AutoScheduleMainFragment.WRONGCODE, intent);
+        setResult(LocationDialogFragment.WRONGCODE, intent);
         this.finish();
         return false;
     }
@@ -103,10 +110,6 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
         return false;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
 
     @Override
     public void onGetInputtips(final List<Tip> list, int i) {
@@ -134,5 +137,15 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
      */
     private static boolean IsEmptyOrNullString(String s) {
         return (s == null) || (s.trim().length() == 0);
+    }
+
+    private void selectItem(int position) {
+        if (mLocationItemBeanList != null) {
+            LocationItemBean locationItemBean = mLocationItemBeanList.get(position);
+            Intent intent = new Intent();
+            intent.putExtra("getLocation", locationItemBean);
+            setResult(LocationDialogFragment.TRUECODE, intent);
+            this.finish();
+        }
     }
 }
