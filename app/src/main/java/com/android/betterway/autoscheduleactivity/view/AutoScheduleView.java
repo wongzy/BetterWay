@@ -22,14 +22,4 @@ public interface AutoScheduleView {
      * 更新recyclerview
      */
     void notifyRecyclerView();
-
-    /**
-     * 显示添加按钮
-     */
-    void showButton();
-
-    /**
-     * 隐藏添加按钮
-     */
-    void hideButton();
 }

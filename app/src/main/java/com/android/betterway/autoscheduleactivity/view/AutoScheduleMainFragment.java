@@ -34,8 +34,6 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class AutoScheduleMainFragment extends Fragment implements AutoScheduleView {
-    @BindView(R.id.add_start_location)
-    Button mAddStartLocation;
     @BindString(R.string.location_text_default)
     String defaultString;
 
@@ -114,15 +112,6 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     }
 
 
-    @Override
-    public void showButton() {
-        mAddStartLocation.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideButton() {
-        mAddStartLocation.setVisibility(View.GONE);
-    }
 
     @Override
     public void onDestroyView() {
