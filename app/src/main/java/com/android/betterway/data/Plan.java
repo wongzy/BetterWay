@@ -7,11 +7,20 @@ package com.android.betterway.data;
  */
 
 public abstract class Plan {
+    private String location;
     private MyTime editFinishTime;
     private MyTime startTime;
     private MyTime endTime;
     private int moneySpend;
     private int stayMinutes;
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
 
     public MyTime getEditFinishTime() {
         return editFinishTime;

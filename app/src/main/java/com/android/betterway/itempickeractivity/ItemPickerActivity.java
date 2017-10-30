@@ -95,7 +95,7 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        LogUtil.e("onQueryTextChange", newText);
+        LogUtil.d("onQueryTextChange", newText);
         if (!isEmptyOrNullString(newText)) {
             InputtipsQuery inputquery = new InputtipsQuery(newText, searchCity);
             inputquery.setCityLimit(true);

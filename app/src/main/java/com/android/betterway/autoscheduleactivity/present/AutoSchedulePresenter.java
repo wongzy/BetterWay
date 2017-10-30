@@ -1,5 +1,6 @@
 package com.android.betterway.autoscheduleactivity.present;
 
+import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.Plan;
 
 import java.util.List;
@@ -13,15 +14,15 @@ import java.util.List;
 public interface AutoSchedulePresenter {
     /**
      * 增加计划
-     * @param plan 要增加的计划
+     * @param locationPlan 要增加的计划
      */
-    void addPlan(Plan plan);
+    void addPlan(LocationPlan locationPlan);
 
     /**
      * 获得所有的计划
      * @return 所有计划
      */
-    List<? extends Plan> getList();
+    List<LocationPlan> getList();
 
     /**
      * 删除计划

@@ -23,6 +23,7 @@ import android.widget.TimePicker;
 import com.amap.api.services.core.LatLonPoint;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationItemBean;
+import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.MyTime;
 import com.android.betterway.itempickeractivity.ItemPickerActivity;
 import com.android.betterway.other.MapMarker;
@@ -48,6 +49,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private ViewGroup mViewGroup;
     private MyTime myTime;
     private String searchLocation;
+    private LatLonPoint mLatLonPoint;
     public static final int TRUECODE = 100;
     public static final int WRONGCODE = 101;
     @Override
@@ -79,10 +81,9 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                     public void onClick(DialogInterface dialog, int which) {
                         if (TextUtils.isEmpty(mEditLocation.getText())) {
                             ToastUtil.show(getContext(), "未输入地点");
-                        } else if (TextUtils.isEmpty(mSpendTime.getText())) {
-                            ToastUtil.show(getContext(), "未输入消耗时间");
                         } else {
                             postSureCode(MapMarker.ADD);
+                            getLocationPlanData();
                             dialog.dismiss();
                         }
                     }
@@ -159,10 +160,9 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             LocationItemBean locationItemBean = data.getParcelableExtra("getLocation");
             mEditLocation.setText(locationItemBean.getName());
             postLatlngPoint(locationItemBean.getLatLonPoint());
+            mLatLonPoint = locationItemBean.getLatLonPoint();
         } else if (resultCode == WRONGCODE) {
             ToastUtil.show(getContext(), "请选择一个精确的地点");
-        } else {
-            ToastUtil.show(getContext(), "未选择地点");
         }
     }
 
@@ -182,5 +182,37 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private void postSureCode(MapMarker mapMarker) {
         LogUtil.e("DialogFragment", "PostSureCode");
         EventBus.getDefault().postSticky(mapMarker);
+    }
+
+    /**
+     * 获得用户输入的数据
+     */
+    public void getLocationPlanData() {
+        LocationPlan locationPlan = new LocationPlan();
+        locationPlan.setLocation(mEditLocation.getText().toString());
+        if (!TextUtils.isEmpty(mThingStatement.getText())) {
+            locationPlan.setStatement(mThingStatement.getText().toString());
+        }
+        if (!TextUtils.isEmpty(mSpendMoney.getText())) {
+            int spendMoney = Integer.parseInt(mSpendMoney.getText().toString());
+            locationPlan.setMoneySpend(spendMoney);
+        }
+        if (!TextUtils.isEmpty(mSpendTime.getText())) {
+            int spendTime = Integer.parseInt(mSpendTime.getText().toString());
+            locationPlan.setStayMinutes(spendTime);
+        }
+        if (mStartTime.getVisibility() == View.VISIBLE) {
+            locationPlan.setStartTime(myTime);
+        }
+        locationPlan.setLatLonPoint(mLatLonPoint);
+        postLocationPlanData(locationPlan);
+    }
+
+    /**
+     * 通过事件总线发送LocationPlan
+     * @param locationPlan 需要发送的LocationPlan
+     */
+    private void postLocationPlanData(LocationPlan locationPlan) {
+        EventBus.getDefault().postSticky(locationPlan);
     }
 }

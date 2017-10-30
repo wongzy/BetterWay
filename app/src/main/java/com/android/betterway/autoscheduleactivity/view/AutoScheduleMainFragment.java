@@ -15,7 +15,9 @@ import com.android.betterway.autoscheduleactivity.daggerneed.AutoScheduleMainFra
 import com.android.betterway.autoscheduleactivity.daggerneed.AutoSchedulePresenterImpelModule;
 import com.android.betterway.autoscheduleactivity.daggerneed.DaggerAutoScheduleMainFragmentComponent;
 import com.android.betterway.autoscheduleactivity.present.AutoSchedulePresenterImpel;
+import com.android.betterway.data.LocationPlan;
 import com.android.betterway.itemplandialog.LocationDialogFragment;
+import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,6 +42,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     Unbinder unbinder;
     private AutoSchedulePresenterImpel mAutoSchedulePresenterImpel;
     private String searchLocation;
+    private static final String TAG = "AutoScheduleMainFragment";
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -75,6 +78,16 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onLocationEvent(String location) {
         searchLocation = location;
+    }
+
+    /**
+     * 接收到dialogfragment发送的LocationPlan后的操作
+     * @param locationPlan 接收到的LocationPlain
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onLocationPlanEvent(LocationPlan locationPlan) {
+        LogUtil.d(TAG, "onLocationPlanEvent");
+        mAutoSchedulePresenterImpel.addPlan(locationPlan);
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

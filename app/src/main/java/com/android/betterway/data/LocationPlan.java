@@ -1,5 +1,7 @@
 package com.android.betterway.data;
 
+import com.amap.api.services.core.LatLonPoint;
+
 /**
  * @author Jackdow
  * @version 1.0
@@ -8,6 +10,15 @@ package com.android.betterway.data;
 
 public class LocationPlan extends Plan {
     private String statement;
+    private LatLonPoint mLatLonPoint;
+
+    public LatLonPoint getLatLonPoint() {
+        return mLatLonPoint;
+    }
+
+    public void setLatLonPoint(LatLonPoint latLonPoint) {
+        mLatLonPoint = latLonPoint;
+    }
 
     public String getStatement() {
         return statement;
