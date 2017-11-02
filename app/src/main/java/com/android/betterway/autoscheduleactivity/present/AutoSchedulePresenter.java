@@ -19,12 +19,6 @@ public interface AutoSchedulePresenter {
     void addPlan(LocationPlan locationPlan);
 
     /**
-     * 获得所有的计划
-     * @return 所有计划
-     */
-    List<LocationPlan> getList();
-
-    /**
      * 删除计划
      * @param position 要删除的计划的位置
      */

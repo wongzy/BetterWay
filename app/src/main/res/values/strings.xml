@@ -29,6 +29,7 @@
     <string name="input_keyword">请输入地点关键字</string>
     <string name="test_name">武汉工程大学</string>
     <string name="test_address">武汉市江夏区流芳大道特一号</string>
+    <string name="addlocation">点击添加地点</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

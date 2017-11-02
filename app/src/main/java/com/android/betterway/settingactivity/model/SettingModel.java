@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import butterknife.BindString;
+
 /**
  * @author Jackdow
  * @version 1.0

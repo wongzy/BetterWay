@@ -50,9 +50,10 @@ public final class TimeUtil {
      * @return 相差天数（算上开始那天）
      */
     public static int getDayDuration(MyDate startDate, MyDate endDate) {
-        Date date1 = new Date(startDate.getYear(), startDate.getMonth(), startDate.getDay());
-        Date date2 = new Date(endDate.getYear(), endDate.getMonth(), endDate.getDay());
-        return (int) (date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
+        Date date1 = new Date(startDate.getYear(), startDate.getMonth()-1, startDate.getDay());
+        Date date2 = new Date(endDate.getYear(), endDate.getMonth()-1, endDate.getDay());
+        int i = (int)(date2.getTime() - date1.getTime()) / (1000 * 3600 * 24);
+        return i;
     }
 
     /**

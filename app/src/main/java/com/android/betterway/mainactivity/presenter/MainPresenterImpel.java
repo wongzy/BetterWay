@@ -9,6 +9,7 @@ import com.android.betterway.mainactivity.model.MainModel;
 import com.android.betterway.mainactivity.view.MainView;
 import com.android.betterway.network.image.ImageDownload;
 import com.android.betterway.settingactivity.view.SettingActivity;
+import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
 
 

@@ -1,8 +1,11 @@
 package com.android.betterway.autoscheduleactivity.present;
 
+import android.util.Log;
+
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleView;
 import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.Plan;
+import com.android.betterway.recyclerview.LocationPlanAdapter;
 import com.android.betterway.utils.LogUtil;
 
 import org.greenrobot.eventbus.ThreadMode;
@@ -21,7 +24,6 @@ import javax.inject.Inject;
 public class AutoSchedulePresenterImpel implements AutoSchedulePresenter {
     private final AutoScheduleView mAutoScheduleView;
     private static final String TAG = "AutoSchedulePresenterImpel";
-    private List<LocationPlan> mLocationPlanList = new ArrayList<LocationPlan>();
     @Inject
     public AutoSchedulePresenterImpel(AutoScheduleView autoScheduleView) {
         mAutoScheduleView = autoScheduleView;
@@ -29,23 +31,24 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter {
 
     @Override
     public void addPlan(LocationPlan locationPlan) {
-        mLocationPlanList.add(locationPlan);
-        LogUtil.d(TAG, "addPlan " + mLocationPlanList.size());
-        mAutoScheduleView.hideButton();
+        LogUtil.d(TAG, "addPlan()");
+        LocationPlanAdapter locationPlanAdapter = mAutoScheduleView.getLocationPlanAdapter();
+        locationPlanAdapter.addLocation(locationPlan);
     }
 
-    @Override
-    public List<LocationPlan> getList() {
-        return mLocationPlanList;
-    }
+
 
     @Override
     public void deletePlan(int position) {
-        mLocationPlanList.remove(position);
+        LogUtil.d(TAG, "deletePlan()");
+        LocationPlanAdapter locationPlanAdapter = mAutoScheduleView.getLocationPlanAdapter();
+        locationPlanAdapter.removeLocation(position);
     }
 
     @Override
     public void deleteAllPlan() {
-        mLocationPlanList.clear();
+        LogUtil.d(TAG, "deleteAllPlan()");
+        LocationPlanAdapter locationPlanAdapter = mAutoScheduleView.getLocationPlanAdapter();
+        locationPlanAdapter.removeAllLocation();
     }
 }

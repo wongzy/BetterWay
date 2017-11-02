@@ -9,8 +9,10 @@ import android.widget.TextView;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationItemBean;
 
-
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @author Jackdow
@@ -21,17 +23,19 @@ import java.util.List;
 public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHolder> {
     private List<LocationItemBean> mLocationItemBeanList;
     private SelectItem mSelectItem;
+
     /**
      * 内部ViewHolder类
      */
     static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView name;
-        TextView address;
+        @BindView(R.id.pickitem_name)
+        TextView mPickitemName;
+        @BindView(R.id.pickitem_address)
+        TextView mPickitemAddress;
         View mainView;
-         ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
-            name = (TextView) itemView.findViewById(R.id.pickitem_name);
-            address = (TextView) itemView.findViewById(R.id.pickitem_address);
+            ButterKnife.bind(this, itemView);
             mainView = itemView;
         }
     }
@@ -40,8 +44,8 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int i = position;
         LocationItemBean locationItemBean = mLocationItemBeanList.get(i);
-        holder.name.setText(locationItemBean.getName());
-        holder.address.setText(locationItemBean.getAddress());
+        holder.mPickitemName.setText(locationItemBean.getName());
+        holder.mPickitemAddress.setText(locationItemBean.getAddress());
         holder.mainView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,9 +59,11 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     public PickItemAdapter(List<LocationItemBean> locationItemBeans) {
         mLocationItemBeanList = locationItemBeans;
     }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_pick_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.location_pick_item, parent, false);
         return new ViewHolder(view);
     }
 
@@ -65,6 +71,7 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     public int getItemCount() {
         return mLocationItemBeanList.size();
     }
+
     public void setSelectItem(SelectItem selectItem) {
         mSelectItem = selectItem;
     }
@@ -75,7 +82,8 @@ public class PickItemAdapter extends RecyclerView.Adapter<PickItemAdapter.ViewHo
     public interface SelectItem {
         /**
          * 在活动中定义的方法
-         * @param view view对象
+         *
+         * @param view     view对象
          * @param position item的位置
          */
         void select(View view, int position);

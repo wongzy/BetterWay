@@ -114,10 +114,10 @@ public class ItemPickerActivity extends AppCompatActivity implements SearchView.
 
     @Override
     public void onGetInputtips(final List<Tip> list, int i) {
-        LogUtil.e("onGetInputtips", list.size() + " items");
+        LogUtil.v("onGetInputtips", list.size() + " items");
         if (i == 1000) {
             for (int j = 0; j < list.size(); j++) {
-                LogUtil.e("dist", list.get(j).getDistrict());
+                LogUtil.v("dist", list.get(j).getDistrict());
                 LocationItemBean locationItemBean = new LocationItemBean();
                 Tip tip = list.get(j);
                 locationItemBean.setName(tip.getName());

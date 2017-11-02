@@ -13,7 +13,10 @@ public abstract class Plan {
     private MyTime endTime;
     private int moneySpend;
     private int stayMinutes;
-
+    public Plan() {
+        moneySpend = 0;
+        stayMinutes = 20;
+    }
     public String getLocation() {
         return location;
     }

@@ -1,6 +1,8 @@
 package com.android.betterway.autoscheduleactivity.view;
 
 
+import com.android.betterway.recyclerview.LocationPlanAdapter;
+
 /**
  * @author Jackdow
  * @version 1.0
@@ -8,18 +10,20 @@ package com.android.betterway.autoscheduleactivity.view;
  */
 
 public interface AutoScheduleView {
-    /**
-     * 显示recyclerview
-     */
-    void showRecyclerView();
 
     /**
-     * 隐藏recyclerview
+     * 是否完成安排
      */
-    void hideRecyclerView();
+    void showFinishedDialog();
 
     /**
-     * 更新recyclerview
+     * 是否清空列表
      */
-    void notifyRecyclerView();
+    void showClearAllDialog();
+
+    /**
+     * 获得当前的adapter
+     * @return adapter
+     */
+    LocationPlanAdapter getLocationPlanAdapter();
 }

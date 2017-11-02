@@ -76,18 +76,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                 .setIcon(R.drawable.ic_action_item_dialog)
                 .setView(view)
                 .setTitle("请输入信息")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (TextUtils.isEmpty(mEditLocation.getText())) {
-                            ToastUtil.show(getContext(), "未输入地点");
-                        } else {
-                            postSureCode(MapMarker.ADD);
-                            getLocationPlanData();
-                            dialog.dismiss();
-                        }
-                    }
-                })
+                .setPositiveButton("确定", new On)
                 .setNegativeButton("取消", null);
         AlertDialog alertDialog = builder.create();
         alertDialog.setOnCancelListener(null);
@@ -197,7 +186,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             int spendMoney = Integer.parseInt(mSpendMoney.getText().toString());
             locationPlan.setMoneySpend(spendMoney);
         }
-        if (!TextUtils.isEmpty(mSpendTime.getText())) {
+        if (!TextUtils.isEmpty(mSpendTime.getText())&&!(mSpendTime.getText().toString().equals(null))) {
             int spendTime = Integer.parseInt(mSpendTime.getText().toString());
             locationPlan.setStayMinutes(spendTime);
         }
