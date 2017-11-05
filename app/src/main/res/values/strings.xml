@@ -30,6 +30,10 @@
     <string name="test_name">武汉工程大学</string>
     <string name="test_address">武汉市江夏区流芳大道特一号</string>
     <string name="addlocation">点击添加地点</string>
+    <string name="use_bycircle">骑单车出行</string>
+    <string name="use_car_or_taxi">驾车或出租车出行</string>
+    <string name="use_public_tool">乘坐公交车和地铁等公共交通工具出行</string>
+    <string name="annonation_warning">注：以下出行方式（骑单车除外）,均会在两地点距离较近时自动变为步行</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

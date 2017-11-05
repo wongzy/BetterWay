@@ -1,6 +1,8 @@
 package com.android.betterway.recyclerview;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.android.betterway.R;
 import com.android.betterway.data.LocationPlan;
+import com.android.betterway.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
  */
 
 public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private List<LocationPlan> mLocationPlanList;
+    private  List<LocationPlan> mLocationPlanList;
     private static final int CONTENT = 1;
     private static final int BOTTOM = 2;
     private AddLocationButton mAddLocationButton;
@@ -65,32 +68,7 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     public LocationPlanAdapter() {
-        mLocationPlanList = new ArrayList<LocationPlan>();
-    }
-
-    /**
-     * 添加计划地点
-     * @param locationPlan 要添加的地点
-     */
-    public void addLocation(LocationPlan locationPlan) {
-        mLocationPlanList.add(locationPlan);
-        notifyItemInserted(mLocationPlanList.size()-1);
-    }
-
-    /**
-     * 移除计划地点
-     * @param postion 移除地点的位置
-     */
-    public void removeLocation(int postion) {
-        mLocationPlanList.remove(postion);
-        notifyItemRemoved(postion);
-    }
-
-    /**
-     * 移除所有地点
-     */
-    public void removeAllLocation() {
-        mLocationPlanList.clear();
+        mLocationPlanList = new ArrayList<>();
     }
     /**
      * 根据位置判断item的类型
@@ -119,7 +97,6 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return new ViewHolder(contentView);
         }
     }
-
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ViewHolder) {
@@ -131,12 +108,12 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((ViewHolder) holder).mThingStatementInItem.setVisibility(View.GONE);
             }
             if (locationPlan.getMoneySpend() != 0) {
-                ((ViewHolder) holder).mSpendMoneyInItem.setText(locationPlan.getMoneySpend());
+                ((ViewHolder) holder).mSpendMoneyInItem.setText(locationPlan.getMoneySpend() + "元");
             } else {
                 ((ViewHolder) holder).mSpendMoneyInItem.setVisibility(View.GONE);
             }
             if (locationPlan.getStayMinutes() != 0) {
-                String stayMinutes = locationPlan.getStatement() + "分钟";
+                String stayMinutes = locationPlan.getStayMinutes() + "分钟";
                 ((ViewHolder) holder).mSpendTimeInItem.setText(stayMinutes);
             } else {
                 ((ViewHolder) holder).mSpendTimeInItem.setVisibility(View.GONE);
@@ -173,4 +150,26 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemCount() {
         return mLocationPlanList.size() + 1;
     }
+
+    public void addLocationPlan(LocationPlan locationPlan) {
+        mLocationPlanList.add(locationPlan);
+        notifyItemInserted(mLocationPlanList.size());
+    }
+    public boolean getIsFirst() {
+        return mLocationPlanList.size() == 0;
+    }
+    public void removeLocationPlan(int position) {
+        mLocationPlanList.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void removeAllLocationPlan(){
+        int i = mLocationPlanList.size();
+        mLocationPlanList.clear();
+        for (int j = 0; j <= i; j ++) {
+            notifyItemRemoved(j);
+        }
+    }
+
+
 }

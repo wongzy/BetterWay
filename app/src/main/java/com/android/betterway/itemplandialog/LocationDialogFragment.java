@@ -52,10 +52,10 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
     private LatLonPoint mLatLonPoint;
     public static final int TRUECODE = 100;
     public static final int WRONGCODE = 101;
+    private boolean isFitst = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        this.setCancelable(false); //设置点击屏幕Dialog不消失
     }
 
     @Nullable
@@ -76,7 +76,17 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
                 .setIcon(R.drawable.ic_action_item_dialog)
                 .setView(view)
                 .setTitle("请输入信息")
-                .setPositiveButton("确定", new On)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (TextUtils.isEmpty(mEditLocation.getText())) {
+                            ToastUtil.show(getContext(), "未选择地点");
+                        } else {
+                            getLocationPlanData();
+                            postSureCode(MapMarker.ADD);
+                        }
+                    }
+                })
                 .setNegativeButton("取消", null);
         AlertDialog alertDialog = builder.create();
         alertDialog.setOnCancelListener(null);
@@ -97,10 +107,18 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
         mSpendMoney = (EditText) view.findViewById(R.id.spend_money);
         mStartTime = (TextView) view.findViewById(R.id.start_time);
         mSpendTime = (EditText) view.findViewById(R.id.spend_time);
+        TextView startTimeFloag = (TextView) view.findViewById(R.id.start_time_flag);
         myTime = TimeUtil.getMinuteTime();
         mStartTime.setText(myTime.getSingleTime());
         mEditLocation.setOnClickListener(this);
         mStartTime.setOnClickListener(this);
+        if (isFitst) {
+            mStartTime.setVisibility(View.VISIBLE);
+            startTimeFloag.setVisibility(View.VISIBLE);
+        } else {
+            mStartTime.setVisibility(View.GONE);
+            startTimeFloag.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -148,7 +166,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
         if (resultCode == TRUECODE && data != null) {
             LocationItemBean locationItemBean = data.getParcelableExtra("getLocation");
             mEditLocation.setText(locationItemBean.getName());
-            postLatlngPoint(locationItemBean.getLatLonPoint());
+            postLatlngPointEvent(locationItemBean.getLatLonPoint());
             mLatLonPoint = locationItemBean.getLatLonPoint();
         } else if (resultCode == WRONGCODE) {
             ToastUtil.show(getContext(), "请选择一个精确的地点");
@@ -159,7 +177,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
      * 发送选择地点的坐标
      * @param latLonPoint 选择地点的坐标
      */
-    private void postLatlngPoint(LatLonPoint latLonPoint) {
+    private void postLatlngPointEvent(LatLonPoint latLonPoint) {
         LogUtil.e("DialogFragment", "postLatlngPoint");
         EventBus.getDefault().postSticky(latLonPoint);
     }
@@ -170,7 +188,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
      */
     private void postSureCode(MapMarker mapMarker) {
         LogUtil.e("DialogFragment", "PostSureCode");
-        EventBus.getDefault().postSticky(mapMarker);
+        EventBus.getDefault().post(mapMarker);
     }
 
     /**
@@ -186,11 +204,11 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             int spendMoney = Integer.parseInt(mSpendMoney.getText().toString());
             locationPlan.setMoneySpend(spendMoney);
         }
-        if (!TextUtils.isEmpty(mSpendTime.getText())&&!(mSpendTime.getText().toString().equals(null))) {
+        if (!TextUtils.isEmpty(mSpendTime.getText()) && !(mSpendTime.getText().toString().equals(null))) {
             int spendTime = Integer.parseInt(mSpendTime.getText().toString());
             locationPlan.setStayMinutes(spendTime);
         }
-        if (mStartTime.getVisibility() == View.VISIBLE) {
+        if (isFitst) {
             locationPlan.setStartTime(myTime);
         }
         locationPlan.setLatLonPoint(mLatLonPoint);
@@ -202,6 +220,15 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
      * @param locationPlan 需要发送的LocationPlan
      */
     private void postLocationPlanData(LocationPlan locationPlan) {
-        EventBus.getDefault().postSticky(locationPlan);
+        LogUtil.d("DialogFragment", "postLocationPlanData()");
+        EventBus.getDefault().post(locationPlan);
+    }
+
+    /**
+     * 设置是否为第一个事件
+     * @param misFitst MainFragment中传递的booleean
+     */
+    public void setisFitst(boolean misFitst) {
+        isFitst = misFitst;
     }
 }

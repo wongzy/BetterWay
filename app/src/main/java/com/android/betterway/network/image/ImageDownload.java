@@ -56,7 +56,7 @@ public final class ImageDownload {
                         editor.putString("OnlineImagePath", BASE_URL + imageBean.getURL());
                         editor.putInt("downDate", Integer.parseInt(imageBean.getDate()));
                         editor.apply();
-                        LogUtil.d(TAG, BASE_URL + imageBean.getURL());
+                        LogUtil.i(TAG, BASE_URL + imageBean.getURL());
                         LogUtil.d(TAG, imageBean.getDate());
                     }
                     @Override

@@ -28,6 +28,7 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationBean;
 import com.android.betterway.other.MapMarker;
+import com.android.betterway.other.MarkerControl;
 import com.android.betterway.utils.JsonUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.ToastUtil;
@@ -61,10 +62,9 @@ import io.reactivex.schedulers.Schedulers;
 public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLocationChangeListener,
         GeocodeSearch.OnGeocodeSearchListener {
     private static final String TAG = "AutoScheduleAssistFragment";
-    public static final int ADDTOMAP = 64;
     private AMap aMap;
     private LatLng mLatLng;
-    private List<LatLng> mLatLngList = new ArrayList<LatLng>();
+    private List<Marker> mMarkerList = new ArrayList<Marker>();
     @BindView(R.id.location_text)
     TextView mLocationText;
     @BindColor(R.color.accent)
@@ -307,16 +307,36 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
      * 记录获得点的坐标
      * @param mapMarker 记录的信号
      */
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onIntEvent(MapMarker mapMarker) {
         LogUtil.e(TAG, "addToMap()");
         if (mapMarker == MapMarker.ADD) {
             Marker marker = aMap.addMarker(new MarkerOptions());
             marker.setPosition(mLatLng);
-            mLatLngList.add(mLatLng);
+            mMarkerList.add(marker);
+            LogUtil.d(TAG, "ListLeng=" + mMarkerList.size());
         }
     }
 
+    /**
+     * 删除地图上的标记
+     * @param markerControl 传递消息的对象
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void deleteMarker(MarkerControl markerControl) {
+        LogUtil.d(TAG, "code = " + markerControl.getControl());
+        int code = markerControl.getControl();
+        if (code == -100) {
+            for (int i = 0; i <= mMarkerList.size() - 1; i++) {
+                mMarkerList.get(i).destroy();
+            }
+            mMarkerList.clear();
+        } else {
+            Marker marker = mMarkerList.get(code);
+            mMarkerList.remove(code);
+            marker.destroy();
+        }
+    }
     /**
      * 发送选择的城市
      * @param city 选择的城市

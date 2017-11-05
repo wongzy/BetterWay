@@ -4,10 +4,6 @@
     <item
         android:id="@+id/finish_auto"
         android:title="@string/finish_activity"
-        android:icon="@drawable/ic_action_finishauto"
+        android:icon="@drawable/ic_action_finishtext"
         app:showAsAction="always"/>
-    <item
-        android:id="@+id/clean_all"
-        android:title="@string/clean_all"
-        />
 </menu>

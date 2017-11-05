@@ -75,7 +75,9 @@ public class MainPresenterImpel implements MainPresenter {
                     getSharedPreferences("com.android.betterway_preferences", Context.MODE_PRIVATE);
             int duration = Integer.parseInt(sharedPreferences.getString("update_duration", "1"));
             MyDate myDate = TimeUtil.getDayTime();
+            LogUtil.i(TAG, myDate.toString());
             MyDate lastDate = TimeUtil.intToMyDate(sharedPreferences.getInt("downDate", 0));
+            LogUtil.i(TAG, lastDate.toString());
             if (TimeUtil.getDayDuration(lastDate, myDate) >= duration) {
                 ImageDownload.downloadUrl(activity.getApplicationContext());
             }

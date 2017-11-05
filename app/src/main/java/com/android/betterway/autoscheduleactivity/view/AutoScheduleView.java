@@ -26,4 +26,14 @@ public interface AutoScheduleView {
      * @return adapter
      */
     LocationPlanAdapter getLocationPlanAdapter();
+
+    /**
+     * 显示progressdialog
+     */
+    void showProgressDialog();
+
+    /**
+     * 关闭proogressdialog
+     */
+    void dismissProgressDialog();
 }

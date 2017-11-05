@@ -201,6 +201,7 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
                                 setThemeColor(primaryColor);
                                 break;
                             default:
+                                LogUtil.i(TAG, s);
                                 Glide.with(getApplicationContext()).asBitmap().load(s)
                                         .into(new SimpleTarget<Bitmap>() {
                                             @Override

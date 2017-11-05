@@ -18,7 +18,6 @@ import butterknife.ButterKnife;
  * 自动生成路径的类
  */
 public class AutoScheduleActivity extends AppCompatActivity {
-
     @BindView(R.id.toolbar_auto_schedule)
     Toolbar mToolbarAutoSchedule;
 
@@ -51,10 +50,9 @@ public class AutoScheduleActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.finish_auto:
-                ToastUtil.show(getApplicationContext(), "Clicked finish");
-                break;
-            case R.id.clean_all:
-                ToastUtil.show(getApplicationContext(), "Clicked clean all");
+                AutoScheduleMainFragment autoScheduleMainFragment = (AutoScheduleMainFragment)
+                        getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+                autoScheduleMainFragment.finishPlan();
                 break;
             default:
                 break;
