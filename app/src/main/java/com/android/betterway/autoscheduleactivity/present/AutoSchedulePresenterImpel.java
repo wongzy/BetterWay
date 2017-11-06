@@ -42,6 +42,6 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter {
     }
 
     public boolean isAdded() {
-        return mAutoScheduleView.getLocationPlanAdapter().getItemCount() > 4;
+        return mAutoScheduleView.getLocationPlanAdapter().getItemCount() > 3;
     }
 }

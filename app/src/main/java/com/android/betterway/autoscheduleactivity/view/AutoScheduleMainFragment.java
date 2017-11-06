@@ -270,7 +270,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
             bottomSheetDialog.setContentView(view);
             bottomSheetDialog.show();
         } else {
-            ToastUtil.show(getContext(), "请至少添加4个地点，其中第一个地点为起点，最后一个地点为终点");
+            ToastUtil.show(getContext(), "请至少添加3个地点，其中第一个地点为起点");
         }
     }
 

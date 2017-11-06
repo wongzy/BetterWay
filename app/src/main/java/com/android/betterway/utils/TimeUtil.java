@@ -116,4 +116,19 @@ public final class TimeUtil {
         Date date = new Date(myDate.getYear(), myDate.getMonth(), myDate.getDay());
         return date.getTime();
     }
+
+    public static MyTime SecondsToMyTime(int seconds) {
+        int hour,miniute;
+        if (seconds > 3600) {
+            hour = seconds / 3600;
+            miniute = (seconds % 3600) / 60;
+        } else if (seconds >= 60 && seconds <= 3600) {
+            hour = 0;
+            miniute = seconds / 60;
+        } else {
+            hour  = 0;
+            miniute = 0;
+        }
+        return new MyTime(0, 0, 0, hour, miniute);
+    }
 }

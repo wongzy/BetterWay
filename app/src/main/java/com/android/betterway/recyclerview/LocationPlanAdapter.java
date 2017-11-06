@@ -1,8 +1,6 @@
 package com.android.betterway.recyclerview;
 
-import android.graphics.Canvas;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +9,6 @@ import android.widget.TextView;
 
 import com.android.betterway.R;
 import com.android.betterway.data.LocationPlan;
-import com.android.betterway.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -151,25 +148,41 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return mLocationPlanList.size() + 1;
     }
 
+    /**
+     * 增加地点
+     * @param locationPlan 增加的地点
+     */
     public void addLocationPlan(LocationPlan locationPlan) {
         mLocationPlanList.add(locationPlan);
         notifyItemInserted(mLocationPlanList.size());
     }
+
+    /**
+     * 返回是否为第一个地点
+     * @return 判断
+     */
     public boolean getIsFirst() {
         return mLocationPlanList.size() == 0;
     }
+
+    /**
+     * 移除地点
+     * @param position 需要移除地点的位置
+     */
     public void removeLocationPlan(int position) {
         mLocationPlanList.remove(position);
         notifyItemRemoved(position);
     }
 
-    public void removeAllLocationPlan(){
+    /**
+     * 移除所有的地点
+     */
+    public void removeAllLocationPlan() {
         int i = mLocationPlanList.size();
         mLocationPlanList.clear();
-        for (int j = 0; j <= i; j ++) {
+        for (int j = 0; j <= i; j++) {
             notifyItemRemoved(j);
         }
     }
-
 
 }

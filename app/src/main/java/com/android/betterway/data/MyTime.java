@@ -71,8 +71,8 @@ public class MyTime {
     }
 
     /**
-     *
-     * @return
+     * 将MyTime类转化为MyDate类
+     * @return 得到的MyDate类
      */
     public MyDate parseToMyDate() {
         return new MyDate(year, month, day);
