@@ -36,4 +36,9 @@ public interface AutoScheduleView {
      * 关闭proogressdialog
      */
     void dismissProgressDialog();
+
+    /**
+     * 关闭bottomsheet
+     */
+    void dismissBottomSheet();
 }

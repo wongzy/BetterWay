@@ -45,6 +45,9 @@ import butterknife.Unbinder;
  * A simple {@link Fragment} subclass.
  */
 public class AutoScheduleMainFragment extends Fragment implements AutoScheduleView {
+    private static final int BIKE = 1;
+    private static final int BUS = 2;
+    private static final int CAR = 3;
     @BindString(R.string.location_text_default)
     String defaultString;
 
@@ -59,6 +62,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
             getLocationPlanAdapterList = new ArrayList<SoftReference<LocationPlanAdapter>>();
     private ViewGroup mViewGroup;
     private ProgressDialog mProgressDialog;
+    private BottomSheetDialog bottomSheetDialog;
     @Override
     public void onStart() {
         super.onStart();
@@ -115,8 +119,8 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
                 DaggerAutoScheduleMainFragmentComponent.builder()
                         .autoSchedulePresenterImpelModule(new AutoSchedulePresenterImpelModule(this))
                         .build();
-        mAutoSchedulePresenterImpel = autoScheduleMainFragmentComponent
-                .getAutoAutoSchedulePresenterImpel();
+        autoScheduleMainFragmentComponent.inject(this);
+        mAutoSchedulePresenterImpel = autoScheduleMainFragmentComponent.getAutoAutoSchedulePresenterImpel();
         ItemTouchHelper.SimpleCallback simpleCallback = new
                 ItemTouchHelper.SimpleCallback(ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT,
                         ItemTouchHelper.UP | ItemTouchHelper.DOWN) {
@@ -243,28 +247,28 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
      */
     public void finishPlan() {
         if (mAutoSchedulePresenterImpel.isAdded()) {
-            BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+            bottomSheetDialog = new BottomSheetDialog(getContext());
             View view = getLayoutInflater().inflate(R.layout.chose_approach_to_go, mViewGroup, false);
-            LinearLayout bus,bycycle,taxi;
+            LinearLayout bus, bycycle, taxi;
             bus = (LinearLayout) view.findViewById(R.id.go_out_by_bus);
             bycycle = (LinearLayout) view.findViewById(R.id.go_out_by_bycycle);
             taxi = (LinearLayout) view.findViewById(R.id.go_out_by_car);
             bus.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtil.show(getContext(), "you clicked bus");
+                    mAutoSchedulePresenterImpel.finishAddedLocationPlan(BUS);
                 }
             });
             bycycle.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtil.show(getContext(), "you clicked bycycle");
+                    mAutoSchedulePresenterImpel.finishAddedLocationPlan(BIKE);
                 }
             });
             taxi.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ToastUtil.show(getContext(), "you clicked taxi");
+                    mAutoSchedulePresenterImpel.finishAddedLocationPlan(CAR);
                 }
             });
             bottomSheetDialog.setContentView(view);
@@ -278,6 +282,9 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     public void showProgressDialog() {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(getContext());
+            mProgressDialog.setMessage("正在自动生成计划，请稍等");
+            mProgressDialog.setCancelable(false);
+            mProgressDialog.setCanceledOnTouchOutside(false);
             mProgressDialog.show();
         } else {
             mProgressDialog.show();
@@ -289,5 +296,10 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
         if (mProgressDialog != null) {
             mProgressDialog.dismiss();
         }
+    }
+
+    @Override
+    public void dismissBottomSheet() {
+        bottomSheetDialog.dismiss();
     }
 }

@@ -7,8 +7,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.amap.api.services.core.LatLonPoint;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationPlan;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +26,7 @@ import butterknife.ButterKnife;
  */
 
 public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private  List<LocationPlan> mLocationPlanList;
+    private List<LocationPlan> mLocationPlanList;
     private static final int CONTENT = 1;
     private static final int BOTTOM = 2;
     private AddLocationButton mAddLocationButton;
@@ -32,6 +35,7 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
      * content类
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        View mView;
         @BindView(R.id.location_name_in_item)
         TextView mLocationNameInItem;
         @BindView(R.id.thing_statement_in_item)
@@ -44,6 +48,7 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         TextView mStartTimeInItem;
         ViewHolder(View view) {
             super(view);
+            mView = view;
             ButterKnife.bind(this, view);
         }
     }
@@ -96,6 +101,7 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        final int mPosition = position;
         if (holder instanceof ViewHolder) {
             LocationPlan locationPlan = mLocationPlanList.get(position);
             ((ViewHolder) holder).mLocationNameInItem.setText(locationPlan.getLocation());
@@ -120,6 +126,12 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 ((ViewHolder) holder).mStartTimeInItem.setVisibility(View.GONE);
             }
+            ((ViewHolder) holder).mView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    postLatLngPointEvent(mLocationPlanList.get(mPosition).getLatLonPoint());
+                }
+            });
         }
         if (holder instanceof BottomViewHolder) {
             ((BottomViewHolder) holder).mAddLocationButton.setOnClickListener(new View.OnClickListener() {
@@ -185,4 +197,15 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
     }
 
+    /**
+     * 发送消息
+     * @param latLonPoint 地点信息
+     */
+    private void postLatLngPointEvent(LatLonPoint latLonPoint) {
+        EventBus.getDefault().post(latLonPoint);
+    }
+
+    public List<LocationPlan> getLocationPlanList() {
+        return mLocationPlanList;
+    }
 }

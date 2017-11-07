@@ -314,7 +314,7 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
             Marker marker = aMap.addMarker(new MarkerOptions());
             marker.setPosition(mLatLng);
             mMarkerList.add(marker);
-            LogUtil.d(TAG, "ListLeng=" + mMarkerList.size());
+            LogUtil.d(TAG, "ListLeng =" + mMarkerList.size());
         }
     }
 
