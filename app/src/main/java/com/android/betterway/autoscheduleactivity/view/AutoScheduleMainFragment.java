@@ -2,6 +2,7 @@ package com.android.betterway.autoscheduleactivity.view;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.BottomSheetDialog;
@@ -33,8 +34,10 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.lang.ref.SoftReference;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.WeakHashMap;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -48,6 +51,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     private static final int BIKE = 1;
     private static final int BUS = 2;
     private static final int CAR = 3;
+    private WeakHashMap<String,WeakReference<Context>> mWeakHashMap = new WeakHashMap<>();
     @BindString(R.string.location_text_default)
     String defaultString;
 
@@ -87,6 +91,11 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     @Subscribe(threadMode = ThreadMode.ASYNC)
     public void onLocationEvent(String location) {
         searchLocation = location;
+    }
+
+    @Override
+    public String returnSearchLocation() {
+        return searchLocation;
     }
 
     /**
@@ -301,5 +310,16 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     @Override
     public void dismissBottomSheet() {
         bottomSheetDialog.dismiss();
+    }
+
+    @Override
+    public Context returnContext() {
+        if (mWeakHashMap.get("Context") == null) {
+            WeakReference<Context> reference = new WeakReference<Context>(getContext());
+            mWeakHashMap.put("Context", reference);
+            return reference.get();
+        } else {
+            return mWeakHashMap.get("Context").get();
+        }
     }
 }

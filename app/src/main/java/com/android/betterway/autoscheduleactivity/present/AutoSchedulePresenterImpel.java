@@ -67,21 +67,22 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
      */
     public void finishAddedLocationPlan(int type) {
         mAutoScheduleView.dismissBottomSheet();
+        mListLocationPlan.setContext(mAutoScheduleView.returnContext());
         switch (type) {
             case BIKE:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                        .getLocationPlanList(), BIKE);
+                        .getLocationPlanList(), BIKE, mAutoScheduleView.returnSearchLocation());
                 break;
             case BUS:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                .getLocationPlanList(), BUS);
+                .getLocationPlanList(), BUS, mAutoScheduleView.returnSearchLocation());
                 break;
             case CAR:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                .getLocationPlanList(), CAR);
+                .getLocationPlanList(), CAR, mAutoScheduleView.returnSearchLocation());
                 break;
             default:
                 break;
