@@ -1,43 +1,54 @@
 package com.android.betterway.data;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Id;
+import org.greenrobot.greendao.annotation.NotNull;
+import org.greenrobot.greendao.annotation.Unique;
+
 import java.util.ArrayList;
 import java.util.List;
+import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * @author Jackdow
  * @version 1.0
  *          BetterWay
  */
-
+@Entity
 public  class Schedule {
-    private MyTime editFinishTime;
-    private MyTime startTime;
+    @Id
+    private long editFinishTime;
+    @NotNull
+    private long  startTime;
     private String statement;
-    private int backgroundID;
     private String location;
-    private List<? extends Plan> mPlenlist = new ArrayList<>();
 
-    public MyTime getEditFinishTime() {
+    @Generated(hash = 1322649335)
+    public Schedule(long editFinishTime, long startTime, String statement,
+            String location) {
+        this.editFinishTime = editFinishTime;
+        this.startTime = startTime;
+        this.statement = statement;
+        this.location = location;
+    }
+
+    @Generated(hash = 729319394)
+    public Schedule() {
+    }
+
+    public long getEditFinishTime() {
         return editFinishTime;
     }
 
-    public void setEditFinishTime(MyTime editFinishTime) {
+    public void setEditFinishTime(long editFinishTime) {
         this.editFinishTime = editFinishTime;
     }
 
-    public List<? extends Plan> getPlenlist() {
-        return mPlenlist;
-    }
-
-    public void setPlenlist(List<? extends Plan> plenlist) {
-        mPlenlist = plenlist;
-    }
-
-    public MyTime getStartTime() {
+    public long getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(MyTime startTime) {
+    public void setStartTime(long startTime) {
         this.startTime = startTime;
     }
 
@@ -47,14 +58,6 @@ public  class Schedule {
 
     public void setStatement(String statement) {
         this.statement = statement;
-    }
-
-    public int getBackgroundID() {
-        return backgroundID;
-    }
-
-    public void setBackgroundID(int backgroundID) {
-        this.backgroundID = backgroundID;
     }
 
     public String getLocation() {

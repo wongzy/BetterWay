@@ -1,24 +1,19 @@
 package com.android.betterway.data;
 
-import com.amap.api.services.core.LatLonPoint;
+
 
 /**
  * @author Jackdow
  * @version 1.0
  *          BetterWay
  */
-
 public class LocationPlan extends Plan {
+    private long editFinishTime;
     private String statement;
-    private LatLonPoint mLatLonPoint;
+    private double Lat;
+    private double Lon;
 
-    public LatLonPoint getLatLonPoint() {
-        return mLatLonPoint;
-    }
 
-    public void setLatLonPoint(LatLonPoint latLonPoint) {
-        mLatLonPoint = latLonPoint;
-    }
 
     public String getStatement() {
         return statement;
@@ -26,5 +21,29 @@ public class LocationPlan extends Plan {
 
     public void setStatement(String statement) {
         this.statement = statement;
+    }
+
+    public long getEditFinishTime() {
+        return this.editFinishTime;
+    }
+
+    public void setEditFinishTime(long editFinishTime) {
+        this.editFinishTime = editFinishTime;
+    }
+
+    public double getLat() {
+        return this.Lat;
+    }
+
+    public void setLat(double Lat) {
+        this.Lat = Lat;
+    }
+
+    public double getLon() {
+        return this.Lon;
+    }
+
+    public void setLon(double Lon) {
+        this.Lon = Lon;
     }
 }

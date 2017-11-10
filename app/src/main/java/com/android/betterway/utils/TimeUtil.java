@@ -120,4 +120,10 @@ public final class TimeUtil {
     public static int SecondsToMinutes(int seconds) {
         return seconds / 60;
     }
+
+    public static MyTime longToMyTime(long l) {
+        int hour = (int) l / 100;
+        int min = (int) l % 100;
+        return new MyTime(hour, min);
+    }
 }

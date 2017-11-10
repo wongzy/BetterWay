@@ -6,9 +6,13 @@ import com.amap.api.maps2d.AMapUtils;
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.services.route.BusPath;
 import com.amap.api.services.route.BusRouteResult;
+import com.amap.api.services.route.DrivePath;
 import com.amap.api.services.route.DriveRouteResult;
+import com.amap.api.services.route.Path;
+import com.amap.api.services.route.RidePath;
 import com.amap.api.services.route.RideRouteResult;
 import com.amap.api.services.route.RouteSearch;
+import com.amap.api.services.route.WalkPath;
 import com.amap.api.services.route.WalkRouteResult;
 import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.Plan;
@@ -39,11 +43,12 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
     private static final int BIKE = 1;
     private static final int BUS = 2;
     private static final int CAR = 3;
+    private static final int WALK = 4;
     private static final int LIMIT = 1200;
     private static final int RIGHTCODE = 1000;
     private static final String TAG = "ListLocationPlan";
     private int number;
-    private List<Plan> sortedList = new ArrayList<>();
+    private volatile List<Plan> sortedList = new ArrayList<>();
     private Context mContext;
     @Inject
     public ListLocationPlan() {
@@ -88,11 +93,13 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
             LocationPlan preLocationPlan, nexLocationPlan;
             preLocationPlan = locationPlanList.get(i);
             nexLocationPlan = locationPlanList.get(i + 1);
-            RouteSearch.FromAndTo fromAndTo = new RouteSearch.FromAndTo(preLocationPlan.getLatLonPoint(),
-                    nexLocationPlan.getLatLonPoint());
-            boolean weatherWalk = AMapUtils.calculateLineDistance(LatLngUtil.
-                            convertPointToLatLng(preLocationPlan.getLatLonPoint()),
-                    LatLngUtil.convertPointToLatLng(nexLocationPlan.getLatLonPoint())) <= 1200;
+            RouteSearch.FromAndTo fromAndTo = new RouteSearch.
+                    FromAndTo(LatLngUtil.converLocationPlanToLatLngPoint(preLocationPlan),
+                    LatLngUtil.converLocationPlanToLatLngPoint(nexLocationPlan));
+            boolean weatherWalk = AMapUtils.calculateLineDistance(
+                   LatLngUtil.converLocationPlanToLatLng(preLocationPlan),
+                    LatLngUtil.converLocationPlanToLatLng(nexLocationPlan)
+            ) <= LIMIT;
             switch (type) {
                 case BIKE:
                     RouteSearch.RideRouteQuery rideRouteQuery = new RouteSearch.RideRouteQuery(fromAndTo);
@@ -138,12 +145,12 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
         int count = locationPlanList.size();
         for (int i = 0; i < count; i++) {
             LocationPlan locationPlan = locationPlans.get(locationPlans.size() - 1);
-            LatLng mainLatLng = LatLngUtil.convertPointToLatLng(locationPlan.getLatLonPoint());
+            LatLng mainLatLng = LatLngUtil.converLocationPlanToLatLng(locationPlan);
             float minDis = 0;
             int index = 0;
             for (int j = 0; j < locationPlanList.size(); j++) {
                 LocationPlan compareLocationPlan = locationPlanList.get(j);
-                LatLng compareLatLng = LatLngUtil.convertPointToLatLng(compareLocationPlan.getLatLonPoint());
+                LatLng compareLatLng = LatLngUtil.converLocationPlanToLatLng(compareLocationPlan);
                 float distance = AMapUtils.calculateLineDistance(mainLatLng, compareLatLng);
                 if (minDis == 0 || distance < minDis) {
                     minDis = distance;
@@ -166,34 +173,85 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
         super.setChanged();
         super.notifyObservers(planList);
     }
+
+    /**
+     * 将路径添加进计划
+     * @param fromAndTo 起点和终点的LatlonPoint
+     * @param plan 需要添加的Plan
+     */
+    private void addPlan(RouteSearch.FromAndTo fromAndTo, Plan plan) {
+        for (int j = 0; j < sortedList.size() - 1; j++) {
+            Plan prePlan = sortedList.get(j);
+            Plan nexPlan = sortedList.get(j + 1);
+            if (prePlan instanceof LocationPlan && nexPlan instanceof LocationPlan) {
+                if (LatLngUtil.converLocationPlanToLatLngPoint((LocationPlan) prePlan).equals(fromAndTo.getFrom())
+                        && (LatLngUtil.converLocationPlanToLatLngPoint((LocationPlan) nexPlan).equals(fromAndTo.getTo()))) {
+                    sortedList.add(j + 1, plan);
+                    break;
+                }
+            }
+        }
+        judgeIfFill();
+    }
+
+    /**
+     * 判断是否已经添加完成list
+     */
+    private void judgeIfFill() {
+        if (sortedList.size() == number) {
+            sendPlanList(sortedList);
+        }
+    }
+
+    /**
+     * 获得路径设置RoutePlan对象
+     * @param type 出行方式
+     * @param path 获得的路径
+     * @param cost 花费
+     * @return 设置好的RoutePlan对象
+     */
+    private RoutePlan initAndSetRoutePlan(int type, Path path, int cost) {
+        RoutePlan routePlan = new RoutePlan();
+        routePlan.setType(type);
+        routePlan.setStayMinutes(TimeUtil.SecondsToMinutes((int) path.getDuration()));
+        routePlan.setMoneySpend(cost);
+        return routePlan;
+    }
+
     @Override
     public void onBusRouteSearched(BusRouteResult busRouteResult, int i) {
         if (i == RIGHTCODE) {
             BusPath busPath = busRouteResult.getPaths().get(0);
-            RoutePlan routePlan = new RoutePlan();
-            routePlan.setType(BUS);
-            routePlan.setMoneySpend((int)busPath.getCost());
-            routePlan.setStayMinutes(TimeUtil.SecondsToMinutes((int)busPath.getDuration()));
-            RouteSearch.BusRouteQuery busRouteQuery = busRouteResult.getBusQuery();
-            for (int j = 0; j < sortedList.size(); j++) {
-
-            }
+            RoutePlan routePlan = initAndSetRoutePlan(BUS, busPath, (int) busPath.getCost());
+            addPlan(busRouteResult.getBusQuery().getFromAndTo(), routePlan);
         }
     }
 
     @Override
     public void onDriveRouteSearched(DriveRouteResult driveRouteResult, int i) {
-
+        if (i == RIGHTCODE) {
+            DrivePath drivePath = driveRouteResult.getPaths().get(0);
+            RoutePlan routePlan = initAndSetRoutePlan(CAR, drivePath, (int) drivePath.getTolls());
+            addPlan(driveRouteResult.getDriveQuery().getFromAndTo(), routePlan);
+        }
     }
 
     @Override
     public void onWalkRouteSearched(WalkRouteResult walkRouteResult, int i) {
-
+        if (i == RIGHTCODE) {
+            WalkPath walkPath = walkRouteResult.getPaths().get(0);
+            RoutePlan routePlan = initAndSetRoutePlan(WALK, walkPath, 0);
+            addPlan(walkRouteResult.getWalkQuery().getFromAndTo(), routePlan);
+        }
     }
 
     @Override
     public void onRideRouteSearched(RideRouteResult rideRouteResult, int i) {
-
+        if (i == RIGHTCODE) {
+            RidePath ridePath = rideRouteResult.getPaths().get(0);
+            RoutePlan routePlan = initAndSetRoutePlan(BIKE, ridePath, 0);
+            addPlan(rideRouteResult.getRideQuery().getFromAndTo(), routePlan);
+        }
     }
 
     public void setContext(Context context) {

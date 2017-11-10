@@ -4,8 +4,11 @@ package com.android.betterway.autoscheduleactivity.present;
 import com.android.betterway.autoscheduleactivity.daggerneed.DaggerListLocationPlanComponent;
 import com.android.betterway.autoscheduleactivity.daggerneed.ListLocationPlanComponent;
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleView;
+import com.android.betterway.data.DaoMaster;
+import com.android.betterway.data.DaoSession;
 import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.Plan;
+import com.android.betterway.data.RoutePlan;
 import com.android.betterway.utils.LogUtil;
 
 import java.util.List;
@@ -92,8 +95,22 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     @Override
     public void update(Observable o, Object arg) {
         List<Plan> planList = (List<Plan>) arg;
-        for (Plan plan : planList) {
-            LogUtil.d("Plan : ", plan.getLocation());
+        DaoMaster.DevOpenHelper devOpenHelper_location = new DaoMaster.DevOpenHelper(mAutoScheduleView.returnContext(), "LocatinPlan.db");
+        DaoMaster.DevOpenHelper devOpenHelper_route = new DaoMaster.DevOpenHelper(mAutoScheduleView.returnContext(), "RoutePlan.db");
+        DaoMaster daoMaster_location = new DaoMaster(devOpenHelper_location.getWritableDb());
+        DaoMaster daoMaster_route = new DaoMaster(devOpenHelper_route.getWritableDb());
+        DaoSession daoSession_locatin = daoMaster_location.newSession();
+        DaoSession daoSession_route = daoMaster_route.newSession();
+        for (int i = 0; i < planList.size(); i++) {
+            Plan plan = planList.get(i);
+            plan.setOrder(i);
+
+            if (plan instanceof LocationPlan) {
+                LogUtil.d("LocationPlan", plan.getLocation());
+            }
+            if (plan instanceof RoutePlan) {
+                LogUtil.d("RoutePlan", plan.getStayMinutes() + "分钟, " + plan.getMoneySpend()+ "元");
+            }
         }
         mAutoScheduleView.dismissProgressDialog();
     }

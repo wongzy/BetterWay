@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.amap.api.services.core.LatLonPoint;
 import com.android.betterway.R;
 import com.android.betterway.data.LocationPlan;
+import com.android.betterway.utils.LatLngUtil;
+import com.android.betterway.utils.TimeUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -103,7 +105,7 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final int mPosition = position;
         if (holder instanceof ViewHolder) {
-            LocationPlan locationPlan = mLocationPlanList.get(position);
+            final LocationPlan locationPlan = mLocationPlanList.get(position);
             ((ViewHolder) holder).mLocationNameInItem.setText(locationPlan.getLocation());
             if (locationPlan.getStatement() != null) {
                 ((ViewHolder) holder).mThingStatementInItem.setText(locationPlan.getStatement());
@@ -121,15 +123,15 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             } else {
                 ((ViewHolder) holder).mSpendTimeInItem.setVisibility(View.GONE);
             }
-            if (locationPlan.getStartTime() != null) {
-                ((ViewHolder) holder).mStartTimeInItem.setText(locationPlan.getStartTime().getSingleTime());
+            if (locationPlan.getStartTime() != 0) {
+                ((ViewHolder) holder).mStartTimeInItem.setText(TimeUtil.longToMyTime(locationPlan.getStartTime()).getSingleTime());
             } else {
                 ((ViewHolder) holder).mStartTimeInItem.setVisibility(View.GONE);
             }
             ((ViewHolder) holder).mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postLatLngPointEvent(mLocationPlanList.get(mPosition).getLatLonPoint());
+                    postLatLngPointEvent(LatLngUtil.converLocationPlanToLatLngPoint(mLocationPlanList.get(mPosition)));
                 }
             });
         }

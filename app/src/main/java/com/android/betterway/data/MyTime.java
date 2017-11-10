@@ -19,6 +19,11 @@ public class MyTime {
         this.hour = hour;
         this.minute = minute;
     }
+
+    public MyTime(int hour, int minute) {
+        this.hour = hour;
+        this.minute = minute;
+    }
     public int getYear() {
         return year;
     }
@@ -77,4 +82,10 @@ public class MyTime {
     public MyDate parseToMyDate() {
         return new MyDate(year, month, day);
     }
+
+    public long getLong() {
+        return hour * 100 + minute;
+    }
+
+
 }

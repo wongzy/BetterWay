@@ -209,9 +209,10 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             locationPlan.setStayMinutes(spendTime);
         }
         if (isFitst) {
-            locationPlan.setStartTime(myTime);
+            locationPlan.setStartTime(myTime.getLong());
         }
-        locationPlan.setLatLonPoint(mLatLonPoint);
+        locationPlan.setLat(mLatLonPoint.getLatitude());
+        locationPlan.setLon(mLatLonPoint.getLongitude());
         postLocationPlanData(locationPlan);
     }
 

@@ -2,6 +2,7 @@ package com.android.betterway.utils;
 
 import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
+import com.android.betterway.data.LocationPlan;
 
 /**
  * @author Jackdow
@@ -20,5 +21,13 @@ public final class LatLngUtil {
      */
     public static LatLng convertPointToLatLng(LatLonPoint latLonPoint) {
         return new LatLng(latLonPoint.getLatitude(), latLonPoint.getLongitude());
+    }
+
+    public static LatLonPoint converLocationPlanToLatLngPoint(LocationPlan locationPlan) {
+        return new LatLonPoint(locationPlan.getLat(), locationPlan.getLon());
+    }
+
+    public static LatLng converLocationPlanToLatLng(LocationPlan locationPlan) {
+        return new LatLng(locationPlan.getLat(), locationPlan.getLon());
     }
 }

@@ -1,52 +1,37 @@
 package com.android.betterway.data;
+import org.greenrobot.greendao.annotation.NotNull;
 
 /**
  * @author Jackdow
  * @version 1.0
  *          BetterWay
  */
-
 public abstract class Plan {
     private String location;
-    private MyTime editFinishTime;
-    private MyTime startTime;
-    private MyTime endTime;
+    private long startTime;
+    private long endTime;
+    private int order;
     private int moneySpend;
     private int stayMinutes;
     public Plan() {
         moneySpend = 0;
         stayMinutes = 20;
     }
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
     public String getLocation() {
         return location;
     }
 
     public void setLocation(String location) {
         this.location = location;
-    }
-
-    public MyTime getEditFinishTime() {
-        return editFinishTime;
-    }
-
-    public void setEditFinishTime(MyTime editFinishTime) {
-        this.editFinishTime = editFinishTime;
-    }
-
-    public MyTime getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(MyTime startTime) {
-        this.startTime = startTime;
-    }
-
-    public MyTime getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(MyTime endTime) {
-        this.endTime = endTime;
     }
 
     public int getMoneySpend() {
@@ -63,5 +48,21 @@ public abstract class Plan {
 
     public void setStayMinutes(int stayMinutes) {
         this.stayMinutes = stayMinutes;
+    }
+
+    public long getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(long startTime) {
+        this.startTime = startTime;
+    }
+
+    public long getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(long endTime) {
+        this.endTime = endTime;
     }
 }
