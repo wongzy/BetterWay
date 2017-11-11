@@ -55,4 +55,10 @@ public interface AutoScheduleView {
      * @return 查询城市的名称
      */
     String returnSearchLocation();
+
+    /**
+     * 获得日期
+     * @return 日期
+     */
+    long getDateLong();
 }

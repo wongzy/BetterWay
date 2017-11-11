@@ -11,7 +11,9 @@ import org.greenrobot.greendao.annotation.Generated;
  *          BetterWay
  */
 @Entity
-public class newPlan {
+public class NewPlan {
+    @Id(autoincrement = true)
+    private Long id;
     private String location;
     private long startTime;
     private long endTime;
@@ -21,16 +23,17 @@ public class newPlan {
     private int moneySpend;
     @NotNull
     private int stayMinutes;
-    @Id
+    @NotNull
     private long editFinishTime;
     private int type;
     private String statement;
     private double Lat;
     private double Lon;
-    @Generated(hash = 1133175682)
-    public newPlan(String location, long startTime, long endTime, int order,
-            int moneySpend, int stayMinutes, long editFinishTime, int type,
-            String statement, double Lat, double Lon) {
+    @Generated(hash = 1481491744)
+    public NewPlan(Long id, String location, long startTime, long endTime,
+            int order, int moneySpend, int stayMinutes, long editFinishTime,
+            int type, String statement, double Lat, double Lon) {
+        this.id = id;
         this.location = location;
         this.startTime = startTime;
         this.endTime = endTime;
@@ -43,8 +46,14 @@ public class newPlan {
         this.Lat = Lat;
         this.Lon = Lon;
     }
-    @Generated(hash = 1291828888)
-    public newPlan() {
+    @Generated(hash = 632870933)
+    public NewPlan() {
+    }
+    public Long getId() {
+        return this.id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
     public String getLocation() {
         return this.location;

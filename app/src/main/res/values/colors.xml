@@ -8,6 +8,7 @@
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
+    <color name="time">#33E598</color>
     <color name="divider">#BDBDBD</color>
     <color name="button_pressed">#0288d1</color>
 </resources>

@@ -126,4 +126,17 @@ public final class TimeUtil {
         int min = (int) l % 100;
         return new MyTime(hour, min);
     }
+
+    public static MyTime longToTotalMyTime(long l) {
+        int year = (int) l / 100000000;
+        l -= year * 100000000;
+        int month = (int) l / 1000000;
+        l -= month * 1000000;
+        int day = (int) l / 10000;
+        l -= day * 10000;
+        int hour = (int) l / 100;
+        l -= hour * 100;
+        int minute = (int) l;
+        return new MyTime(year, month, day, hour, minute);
+    }
 }

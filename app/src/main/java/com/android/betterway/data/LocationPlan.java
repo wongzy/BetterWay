@@ -13,8 +13,9 @@ public class LocationPlan extends Plan {
     private double Lat;
     private double Lon;
 
-
-
+    public LocationPlan() {
+        super();
+    }
     public String getStatement() {
         return statement;
     }
@@ -45,5 +46,16 @@ public class LocationPlan extends Plan {
 
     public void setLon(double Lon) {
         this.Lon = Lon;
+    }
+    public NewPlan convertToNewPlan() {
+        NewPlan newPlan = new NewPlan();
+        newPlan.setEditFinishTime(editFinishTime);
+        newPlan.setLat(Lat);
+        newPlan.setLon(Lon);
+        newPlan.setStayMinutes(getStayMinutes());
+        newPlan.setStatement(statement);
+        newPlan.setEndTime(getEndTime());
+        newPlan.setOrder(getOrder());
+        return newPlan;
     }
 }

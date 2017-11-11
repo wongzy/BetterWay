@@ -9,6 +9,7 @@
     tools:context="com.android.betterway.settingactivity.view.SettingActivity">
 
     <android.support.v7.widget.Toolbar
+        app:title="@string/setting"
         android:fitsSystemWindows="true"
         android:id="@+id/toolbar_setting"
         android:layout_width="match_parent"

@@ -19,7 +19,8 @@ public class MyTime {
         this.hour = hour;
         this.minute = minute;
     }
-
+    public MyTime(){
+    }
     public MyTime(int hour, int minute) {
         this.hour = hour;
         this.minute = minute;
@@ -87,5 +88,7 @@ public class MyTime {
         return hour * 100 + minute;
     }
 
-
+    public long getTotalLong() {
+        return year * 100000000 + month * 1000000 + day * 10000 + hour * 100 + minute;
+    }
 }

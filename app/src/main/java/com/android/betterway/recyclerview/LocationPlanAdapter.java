@@ -113,7 +113,8 @@ public class LocationPlanAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 ((ViewHolder) holder).mThingStatementInItem.setVisibility(View.GONE);
             }
             if (locationPlan.getMoneySpend() != 0) {
-                ((ViewHolder) holder).mSpendMoneyInItem.setText(locationPlan.getMoneySpend() + "元");
+                String moneySpend = locationPlan.getMoneySpend() + "元";
+                ((ViewHolder) holder).mSpendMoneyInItem.setText(moneySpend);
             } else {
                 ((ViewHolder) holder).mSpendMoneyInItem.setVisibility(View.GONE);
             }

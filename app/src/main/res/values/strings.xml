@@ -36,6 +36,16 @@
     <string name="annonation_warning">注：以下出行方式（骑单车除外）,均会在两地点距离较近时自动变为步行</string>
     <string name="newplan_db">newPlan.db</string>
     <string name="schedule_db">Schedule.db</string>
+    <string name="schedule_tool_bar_title">查看</string>
+    <string name="schedule_detail">详情</string>
+    <string name="schedule_map">地图</string>
+    <string name="share_to_friend">分享给好友</string>
+    <string name="finish_look">完成</string>
+    <string name="delete_this_schedule">删除此路书</string>
+    <string name="route_line">路径线</string>
+    <string name="fee">车费</string>
+    <string name="cost_time">耗时</string>
+    <string name="go_way">出行方式</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

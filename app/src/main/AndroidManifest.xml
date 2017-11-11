@@ -29,9 +29,7 @@
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="884a555c7c2bdd06914425d35ee176f3">
-            //开发者申请的key
         </meta-data>
-
         <activity
             android:name=".mainactivity.view.MainActivity"
             android:launchMode="singleTask">
@@ -48,6 +46,8 @@
         <activity android:name=".normalscheduleactivity.view.NormalScheduleActivity">
         </activity>
         <activity android:name=".itempickeractivity.ItemPickerActivity">
+        </activity>
+        <activity android:name=".showscheduleactivity.view.ShowScheduleActivity">
         </activity>
     </application>
 

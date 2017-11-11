@@ -213,12 +213,6 @@ public class AutoScheduleAssistFragment extends Fragment implements AMap.OnMyLoc
         super.onSaveInstanceState(outState);
         mMapview.onSaveInstanceState(outState);
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     /**
      * 请求定位权限
      */

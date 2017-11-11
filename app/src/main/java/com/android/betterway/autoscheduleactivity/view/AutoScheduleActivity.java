@@ -8,8 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.android.betterway.R;
+import com.android.betterway.other.DeadMessage;
 import com.android.betterway.utils.NetworkUtil;
 import com.android.betterway.utils.ToastUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +25,7 @@ import butterknife.ButterKnife;
 public class AutoScheduleActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_auto_schedule)
     Toolbar mToolbarAutoSchedule;
-
+    long datelong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,6 +45,7 @@ public class AutoScheduleActivity extends AppCompatActivity {
         }
         Intent intent = getIntent();
         String date = intent.getStringExtra("Date");
+        datelong = intent.getLongExtra("datelong", 20171111);
         mToolbarAutoSchedule.setSubtitle(date);
     }
 
@@ -52,6 +58,7 @@ public class AutoScheduleActivity extends AppCompatActivity {
             case R.id.finish_auto:
                 AutoScheduleMainFragment autoScheduleMainFragment = (AutoScheduleMainFragment)
                         getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+                autoScheduleMainFragment.setDatelong(datelong);
                 autoScheduleMainFragment.finishPlan();
                 break;
             default:
@@ -64,5 +71,27 @@ public class AutoScheduleActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.add_auto_menu, menu);
         return true;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onDeadMessgeEvent(DeadMessage message) {
+        if (message == DeadMessage.FINISH) {
+            finish();
+        }
     }
 }

@@ -55,9 +55,12 @@ public class DatePickerFragment extends DialogFragment {
                                 LogUtil.v(TAG, "add mornalActitity");
                                 Intent intent1 = new Intent(getActivity()
                                         .getApplicationContext(), NormalScheduleActivity.class);
+                                long datelong = (long) (datePicker.getYear() * 10000
+                                        + (datePicker.getMonth() + 1 ) * 100 +datePicker.getDayOfMonth());
                                 String date1 = datePicker.getYear() + "年" + (datePicker.getMonth() + 1)
                                         + "月" + datePicker.getDayOfMonth() + "日";
                                 intent1.putExtra("Date", date1);
+                                intent1.putExtra("datelong", datelong);
                                 startActivity(intent1);
                                 break;
                             default:

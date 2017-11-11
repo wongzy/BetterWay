@@ -13,7 +13,9 @@ import org.greenrobot.greendao.annotation.Generated;
 public class RoutePlan extends Plan {
     private long editFinishTime;
     private int type;
-
+    public RoutePlan() {
+        super();
+    }
     public int getType() {
         return type;
     }
@@ -28,5 +30,16 @@ public class RoutePlan extends Plan {
 
     public void setEditFinishTime(long editFinishTime) {
         this.editFinishTime = editFinishTime;
+    }
+    public NewPlan convertToNewPlan() {
+        NewPlan newPlan = new NewPlan();
+        newPlan.setEditFinishTime(editFinishTime);
+        newPlan.setType(type);
+        newPlan.setMoneySpend(getMoneySpend());
+        newPlan.setStayMinutes(getStayMinutes());
+        newPlan.setOrder(getOrder());
+        newPlan.setEndTime(getEndTime());
+        newPlan.setStartTime(getStartTime());
+        return newPlan;
     }
 }

@@ -204,7 +204,7 @@ public class LocationDialogFragment extends DialogFragment implements View.OnCli
             int spendMoney = Integer.parseInt(mSpendMoney.getText().toString());
             locationPlan.setMoneySpend(spendMoney);
         }
-        if (!TextUtils.isEmpty(mSpendTime.getText()) && !(mSpendTime.getText().toString().equals(null))) {
+        if (!TextUtils.isEmpty(mSpendTime.getText())) {
             int spendTime = Integer.parseInt(mSpendTime.getText().toString());
             locationPlan.setStayMinutes(spendTime);
         }

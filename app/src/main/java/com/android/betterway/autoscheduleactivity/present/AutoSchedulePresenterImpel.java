@@ -1,21 +1,42 @@
 package com.android.betterway.autoscheduleactivity.present;
 
 
+import android.content.Intent;
+import android.util.Log;
+
 import com.android.betterway.autoscheduleactivity.daggerneed.DaggerListLocationPlanComponent;
+import com.android.betterway.autoscheduleactivity.daggerneed.DaggerSQLModelComponent;
 import com.android.betterway.autoscheduleactivity.daggerneed.ListLocationPlanComponent;
+import com.android.betterway.autoscheduleactivity.daggerneed.SQLModelComponent;
+import com.android.betterway.autoscheduleactivity.daggerneed.SQLModelModule;
+import com.android.betterway.autoscheduleactivity.model.SQLModel;
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleView;
 import com.android.betterway.data.DaoMaster;
 import com.android.betterway.data.DaoSession;
 import com.android.betterway.data.LocationPlan;
+import com.android.betterway.data.MyTime;
+import com.android.betterway.data.NewPlan;
 import com.android.betterway.data.Plan;
 import com.android.betterway.data.RoutePlan;
+import com.android.betterway.other.DeadMessage;
+import com.android.betterway.showscheduleactivity.view.ShowScheduleActivity;
 import com.android.betterway.utils.LogUtil;
+import com.android.betterway.utils.TimeUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 import javax.inject.Inject;
+
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @author Jackdow
@@ -29,6 +50,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     private static final int CAR = 3;
     private final AutoScheduleView mAutoScheduleView;
     private ListLocationPlan mListLocationPlan;
+    private SQLModel mSQLModel;
     private static final String TAG = "AutoSchedulePresenterImpel";
     @Inject
     public AutoSchedulePresenterImpel(AutoScheduleView autoScheduleView) {
@@ -38,6 +60,10 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
         listLocationPlanComponent.inject(this);
         mListLocationPlan = listLocationPlanComponent.getListLocationPlan();
         mListLocationPlan.addObserver(this);
+        SQLModelComponent sqlModelComponent =
+                DaggerSQLModelComponent.builder().sQLModelModule(new SQLModelModule(mAutoScheduleView.returnContext()))
+                .build();
+        mSQLModel = sqlModelComponent.getSQLModel();
     }
 
     @Override
@@ -94,24 +120,64 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     @SuppressWarnings("unchecked")
     @Override
     public void update(Observable o, Object arg) {
-        List<Plan> planList = (List<Plan>) arg;
-        DaoMaster.DevOpenHelper devOpenHelper_location = new DaoMaster.DevOpenHelper(mAutoScheduleView.returnContext(), "LocatinPlan.db");
-        DaoMaster.DevOpenHelper devOpenHelper_route = new DaoMaster.DevOpenHelper(mAutoScheduleView.returnContext(), "RoutePlan.db");
-        DaoMaster daoMaster_location = new DaoMaster(devOpenHelper_location.getWritableDb());
-        DaoMaster daoMaster_route = new DaoMaster(devOpenHelper_route.getWritableDb());
-        DaoSession daoSession_locatin = daoMaster_location.newSession();
-        DaoSession daoSession_route = daoMaster_route.newSession();
-        for (int i = 0; i < planList.size(); i++) {
-            Plan plan = planList.get(i);
-            plan.setOrder(i);
-
-            if (plan instanceof LocationPlan) {
-                LogUtil.d("LocationPlan", plan.getLocation());
+        final Object marg = arg;
+        io.reactivex.Observable.create(new ObservableOnSubscribe<Long>() {
+            @Override
+            public void subscribe(ObservableEmitter<Long> e) throws Exception {
+                long datelong = mAutoScheduleView.getDateLong();
+                List<Plan> planList = (List<Plan>) marg;
+                List<NewPlan> newPlanList = new ArrayList<NewPlan>();
+                long editFinishTimeLong = TimeUtil.getMinuteTime().getTotalLong();
+                MyTime nowMyTime =new MyTime();
+                for (int i = 0; i < planList.size(); i++) {
+                    Plan plan = planList.get(i);
+                    if (i == 0 && plan instanceof LocationPlan) {
+                        ((LocationPlan) plan).setEditFinishTime(editFinishTimeLong);
+                        datelong = datelong * 10000 + plan.getStartTime();
+                        MyTime tempMyTime = TimeUtil.longToTotalMyTime(datelong);
+                        nowMyTime = TimeUtil.myTimeAddDuration(tempMyTime, plan.getStayMinutes());
+                        plan.setEndTime(nowMyTime.getTotalLong());
+                        plan.setOrder(i);
+                        newPlanList.add(((LocationPlan) plan).convertToNewPlan());
+                        continue;
+                    }
+                    if (plan instanceof LocationPlan) {
+                        ((LocationPlan) plan).setEditFinishTime(editFinishTimeLong);
+                        plan.setStartTime(nowMyTime.getTotalLong());
+                        nowMyTime = TimeUtil.myTimeAddDuration(nowMyTime, plan.getStayMinutes());
+                        plan.setEndTime(nowMyTime.getTotalLong());
+                        plan.setOrder(i);
+                        newPlanList.add(((LocationPlan) plan).convertToNewPlan());
+                        continue;
+                    }
+                    if (plan instanceof RoutePlan) {
+                        ((RoutePlan) plan).setEditFinishTime(editFinishTimeLong);
+                        plan.setStartTime(nowMyTime.getTotalLong());
+                        nowMyTime = TimeUtil.myTimeAddDuration(nowMyTime, plan.getStayMinutes());
+                        plan.setEndTime(nowMyTime.getTotalLong());
+                        plan.setOrder(i);
+                        newPlanList.add(((RoutePlan) plan).convertToNewPlan());
+                    }
+                }
+                mSQLModel.insertAllPlan(newPlanList);
+                e.onNext(editFinishTimeLong);
             }
-            if (plan instanceof RoutePlan) {
-                LogUtil.d("RoutePlan", plan.getStayMinutes() + "分钟, " + plan.getMoneySpend()+ "元");
-            }
-        }
-        mAutoScheduleView.dismissProgressDialog();
+        }).observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Long>() {
+                    @Override
+                    public void accept(Long key) throws Exception {
+                        Intent intent = new Intent(mAutoScheduleView.returnContext(), ShowScheduleActivity.class);
+                        intent.putExtra("key", key);
+                        intent.putExtra("datelong", mAutoScheduleView.getDateLong());
+                        intent.putExtra("city", mAutoScheduleView.returnSearchLocation());
+                        mAutoScheduleView.dismissProgressDialog();
+                        mAutoScheduleView.returnContext().startActivity(intent);
+                        postDeadMessage(DeadMessage.FINISH);
+                    }
+                });
+    }
+    private void postDeadMessage(DeadMessage deadMessage) {
+        EventBus.getDefault().post(deadMessage);
     }
 }

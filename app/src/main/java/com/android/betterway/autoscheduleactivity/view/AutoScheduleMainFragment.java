@@ -54,7 +54,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     private WeakHashMap<String,WeakReference<Context>> mWeakHashMap = new WeakHashMap<>();
     @BindString(R.string.location_text_default)
     String defaultString;
-
+    private long datelong;
     Unbinder unbinder;
     @BindView(R.id.locationplanrecyclerview)
     RecyclerView mLocationplanrecyclerview;
@@ -321,5 +321,14 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
         } else {
             return mWeakHashMap.get("Context").get();
         }
+    }
+
+    public void setDatelong(long datelong) {
+        this.datelong = datelong;
+    }
+
+    @Override
+    public long getDateLong() {
+        return datelong;
     }
 }
