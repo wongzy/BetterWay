@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import com.android.betterway.R;
 import com.android.betterway.data.MyDate;
 import com.android.betterway.data.NewPlan;
-import com.android.betterway.myview.ScrollViewPager;
 import com.android.betterway.showscheduleactivity.Impel.ShowScheduleImpel;
 import com.android.betterway.showscheduleactivity.daggerneed.DaggerShowScheduleImpelCompont;
 import com.android.betterway.showscheduleactivity.daggerneed.ShowScheduleImpelCompont;
@@ -25,9 +24,6 @@ import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

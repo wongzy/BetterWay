@@ -46,11 +46,17 @@ public class AutoScheduleActivity extends AppCompatActivity {
         setSupportActionBar(mToolbarAutoSchedule);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
         Intent intent = getIntent();
         String date = intent.getStringExtra("Date");
         datelong = intent.getLongExtra("datelong", 20171114);
         type = intent.getIntExtra("type", 2);
+        if (type == 1) {
+            mToolbarAutoSchedule.setTitle("自动路书");
+        } else {
+            mToolbarAutoSchedule.setTitle("自定义路书");
+        }
         mToolbarAutoSchedule.setSubtitle(date);
     }
 

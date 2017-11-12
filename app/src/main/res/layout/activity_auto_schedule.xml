@@ -9,7 +9,6 @@
     tools:context="com.android.betterway.autoscheduleactivity.view.AutoScheduleActivity">
 
     <android.support.v7.widget.Toolbar
-        app:title="自动路书"
         android:id="@+id/toolbar_auto_schedule"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
