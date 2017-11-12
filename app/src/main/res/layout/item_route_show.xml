@@ -9,7 +9,7 @@
     <LinearLayout
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:weightSum="10"
+        android:weightSum="13"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <FrameLayout
@@ -26,7 +26,7 @@
         </FrameLayout>
         <LinearLayout
             android:orientation="vertical"
-            android:layout_weight="9"
+            android:layout_weight="12"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <LinearLayout
@@ -68,7 +68,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
                     <TextView
-                        android:id="@+id/cost_time_show"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="@android:color/holo_orange_light"
@@ -80,6 +79,7 @@
                 </android.support.v7.widget.CardView>
 
                 <TextView
+                    android:id="@+id/cost_time_show"
                     android:gravity="start|center"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

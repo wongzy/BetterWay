@@ -1,5 +1,8 @@
 package com.android.betterway.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
@@ -11,7 +14,7 @@ import org.greenrobot.greendao.annotation.Generated;
  *          BetterWay
  */
 @Entity
-public class NewPlan {
+public class NewPlan implements Parcelable{
     @Id(autoincrement = true)
     private Long id;
     private String location;
@@ -121,4 +124,37 @@ public class NewPlan {
     public void setLon(double Lon) {
         this.Lon = Lon;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(location);
+        dest.writeLong(startTime);
+        dest.writeInt(moneySpend);
+        dest.writeInt(stayMinutes);
+        dest.writeInt(type);
+        dest.writeString(statement);
+    }
+    public static final Parcelable.Creator<NewPlan> CREATOR = new Parcelable.Creator<NewPlan>() {
+        @Override
+        public NewPlan createFromParcel(Parcel source) {
+            NewPlan newPlan = new NewPlan();
+            newPlan.location = source.readString();
+            newPlan.startTime = source.readLong();
+            newPlan.moneySpend = source.readInt();
+            newPlan.stayMinutes = source.readInt();
+            newPlan.type = source.readInt();
+            newPlan.statement = source.readString();
+            return newPlan;
+        }
+
+        @Override
+        public NewPlan[] newArray(int size) {
+            return new NewPlan[size];
+        }
+    };
 }

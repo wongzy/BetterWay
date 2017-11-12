@@ -50,7 +50,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     private static final int CAR = 3;
     private final AutoScheduleView mAutoScheduleView;
     private ListLocationPlan mListLocationPlan;
-    private SQLModel mSQLModel;
+    //private SQLModel mSQLModel;
     private static final String TAG = "AutoSchedulePresenterImpel";
     @Inject
     public AutoSchedulePresenterImpel(AutoScheduleView autoScheduleView) {
@@ -59,11 +59,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                 DaggerListLocationPlanComponent.builder().build();
         listLocationPlanComponent.inject(this);
         mListLocationPlan = listLocationPlanComponent.getListLocationPlan();
-        mListLocationPlan.addObserver(this);
-        SQLModelComponent sqlModelComponent =
-                DaggerSQLModelComponent.builder().sQLModelModule(new SQLModelModule(mAutoScheduleView.returnContext()))
-                .build();
-        mSQLModel = sqlModelComponent.getSQLModel();
+        mListLocationPlan.addObserver(this);;
     }
 
     @Override
@@ -121,20 +117,20 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     @Override
     public void update(Observable o, Object arg) {
         final Object marg = arg;
-        io.reactivex.Observable.create(new ObservableOnSubscribe<Long>() {
+        io.reactivex.Observable.create(new ObservableOnSubscribe<ArrayList<NewPlan>>() {
             @Override
-            public void subscribe(ObservableEmitter<Long> e) throws Exception {
+            public void subscribe(ObservableEmitter<ArrayList<NewPlan>> e) throws Exception {
                 long datelong = mAutoScheduleView.getDateLong();
                 List<Plan> planList = (List<Plan>) marg;
-                List<NewPlan> newPlanList = new ArrayList<NewPlan>();
-                long editFinishTimeLong = TimeUtil.getMinuteTime().getTotalLong();
+                ArrayList<NewPlan> newPlanList = new ArrayList<NewPlan>();
                 MyTime nowMyTime =new MyTime();
                 for (int i = 0; i < planList.size(); i++) {
                     Plan plan = planList.get(i);
                     if (i == 0 && plan instanceof LocationPlan) {
-                        ((LocationPlan) plan).setEditFinishTime(editFinishTimeLong);
-                        datelong = datelong * 10000 + plan.getStartTime();
+                        datelong = datelong * 10000L + (long) plan.getStartTime();
+                        LogUtil.i(TAG, "datelong = " + datelong);
                         MyTime tempMyTime = TimeUtil.longToTotalMyTime(datelong);
+                        LogUtil.i(TAG, tempMyTime.toString());
                         nowMyTime = TimeUtil.myTimeAddDuration(tempMyTime, plan.getStayMinutes());
                         plan.setEndTime(nowMyTime.getTotalLong());
                         plan.setOrder(i);
@@ -142,7 +138,6 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                         continue;
                     }
                     if (plan instanceof LocationPlan) {
-                        ((LocationPlan) plan).setEditFinishTime(editFinishTimeLong);
                         plan.setStartTime(nowMyTime.getTotalLong());
                         nowMyTime = TimeUtil.myTimeAddDuration(nowMyTime, plan.getStayMinutes());
                         plan.setEndTime(nowMyTime.getTotalLong());
@@ -151,7 +146,6 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                         continue;
                     }
                     if (plan instanceof RoutePlan) {
-                        ((RoutePlan) plan).setEditFinishTime(editFinishTimeLong);
                         plan.setStartTime(nowMyTime.getTotalLong());
                         nowMyTime = TimeUtil.myTimeAddDuration(nowMyTime, plan.getStayMinutes());
                         plan.setEndTime(nowMyTime.getTotalLong());
@@ -159,16 +153,15 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                         newPlanList.add(((RoutePlan) plan).convertToNewPlan());
                     }
                 }
-                mSQLModel.insertAllPlan(newPlanList);
-                e.onNext(editFinishTimeLong);
+                e.onNext(newPlanList);
             }
-        }).observeOn(Schedulers.io())
+        }).observeOn(Schedulers.newThread())
                 .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<Long>() {
+                .subscribe(new Consumer<ArrayList<NewPlan>>() {
                     @Override
-                    public void accept(Long key) throws Exception {
+                    public void accept(ArrayList<NewPlan> list) throws Exception {
                         Intent intent = new Intent(mAutoScheduleView.returnContext(), ShowScheduleActivity.class);
-                        intent.putExtra("key", key);
+                        intent.putParcelableArrayListExtra("list", list);
                         intent.putExtra("datelong", mAutoScheduleView.getDateLong());
                         intent.putExtra("city", mAutoScheduleView.returnSearchLocation());
                         mAutoScheduleView.dismissProgressDialog();

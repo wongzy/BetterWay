@@ -49,13 +49,15 @@ public class LocationPlan extends Plan {
     }
     public NewPlan convertToNewPlan() {
         NewPlan newPlan = new NewPlan();
-        newPlan.setEditFinishTime(editFinishTime);
+        newPlan.setLocation(getLocation());
+        newPlan.setStartTime(getStartTime());
         newPlan.setLat(Lat);
         newPlan.setLon(Lon);
         newPlan.setStayMinutes(getStayMinutes());
         newPlan.setStatement(statement);
         newPlan.setEndTime(getEndTime());
         newPlan.setOrder(getOrder());
+        newPlan.setMoneySpend(getMoneySpend());
         return newPlan;
     }
 }

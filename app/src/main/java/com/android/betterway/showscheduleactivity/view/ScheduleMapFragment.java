@@ -11,11 +11,17 @@ import android.view.ViewGroup;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.MapView;
+import com.amap.api.maps2d.model.LatLng;
+import com.amap.api.maps2d.model.Marker;
+import com.amap.api.maps2d.model.MarkerOptions;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.android.betterway.R;
+import com.android.betterway.other.MapMarker;
 import com.android.betterway.utils.ToastUtil;
 import com.tbruyelle.rxpermissions2.Permission;
 import com.tbruyelle.rxpermissions2.RxPermissions;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,8 +45,24 @@ public class ScheduleMapFragment extends Fragment {
         unbinder = ButterKnife.bind(this, view);
         mMapShow.onCreate(savedInstanceState);
         initMap();
+        List<LatLng> mLatLngList = this.getArguments().getParcelableArrayList("latlnglist");
+        initLatLng(mLatLngList);
         return view;
     }
+
+    /**
+     * 初始化坐标
+     * @param latLngs 需要初始化的坐标List
+     */
+    private void initLatLng(List<LatLng> latLngs) {
+        for (int i = 0; i < latLngs.size(); i++) {
+            Marker marker = mAMap.addMarker(new MarkerOptions());
+            marker.setPosition(latLngs.get(i));
+            marker.setTitle(String.valueOf(i));
+        }
+        mAMap.moveCamera(CameraUpdateFactory.changeLatLng(latLngs.get(0)));
+    }
+
     /**
      * 初始化地图
      */

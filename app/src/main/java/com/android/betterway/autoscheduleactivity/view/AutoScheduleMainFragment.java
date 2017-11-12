@@ -74,7 +74,6 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
             EventBus.getDefault().register(this);
         }
     }
-
     @Override
     public void onStop() {
         super.onStop();
@@ -314,13 +313,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
 
     @Override
     public Context returnContext() {
-        if (mWeakHashMap.get("Context") == null) {
-            WeakReference<Context> reference = new WeakReference<Context>(getContext());
-            mWeakHashMap.put("Context", reference);
-            return reference.get();
-        } else {
-            return mWeakHashMap.get("Context").get();
-        }
+        return getContext();
     }
 
     public void setDatelong(long datelong) {
@@ -331,4 +324,5 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     public long getDateLong() {
         return datelong;
     }
+
 }

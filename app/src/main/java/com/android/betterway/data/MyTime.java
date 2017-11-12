@@ -1,5 +1,7 @@
 package com.android.betterway.data;
 
+import java.util.Date;
+
 /**
  * @author Jackdow
  * @version 1.0
@@ -89,6 +91,6 @@ public class MyTime {
     }
 
     public long getTotalLong() {
-        return year * 100000000 + month * 1000000 + day * 10000 + hour * 100 + minute;
+        return year * 100000000L + month * 1000000L + day * 10000L + hour * 100L +  (long)minute;
     }
 }

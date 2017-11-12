@@ -1,5 +1,6 @@
 package com.android.betterway.autoscheduleactivity.view;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.lang.ref.WeakReference;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -25,7 +28,7 @@ import butterknife.ButterKnife;
 public class AutoScheduleActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_auto_schedule)
     Toolbar mToolbarAutoSchedule;
-    long datelong;
+    private long datelong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +47,9 @@ public class AutoScheduleActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
+
         String date = intent.getStringExtra("Date");
-        datelong = intent.getLongExtra("datelong", 20171111);
+        datelong = intent.getLongExtra("datelong", 20171114);
         mToolbarAutoSchedule.setSubtitle(date);
     }
 

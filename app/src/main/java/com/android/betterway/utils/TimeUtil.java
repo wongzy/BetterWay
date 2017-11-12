@@ -37,7 +37,7 @@ public final class TimeUtil {
      * @return 当前时间
      */
     public static MyTime getMinuteTime() {
-        Calendar calendar = Calendar.getInstance();
+        Calendar calendar = Calendar.getInstance();;
         return new MyTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
                 calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
                 calendar.get(Calendar.MINUTE));
@@ -84,13 +84,12 @@ public final class TimeUtil {
      * @return 获得的新时间
      */
     public static MyTime myTimeAddDuration(MyTime myTime, int  duration) {
-        Date date = new Date(myTime.getYear(), myTime.getMonth(),
-                myTime.getDay(), myTime.getHour(),
-                myTime.getMinute());
-        Date date1 = new Date();
-        date1.setTime(date.getTime() + duration * 60 * 1000);
-        return new MyTime(date1.getYear(), date1.getMonth(), date1.getDate(),
-                date1.getHours(), date1.getMinutes());
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(myTime.getYear(), myTime.getMonth() - 1, myTime.getDay(), myTime.getHour(), myTime.getMinute());
+        calendar.add(Calendar.MINUTE, duration);
+        return new MyTime(calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH) + 1,
+                calendar.get(Calendar.DAY_OF_MONTH), calendar.get(Calendar.HOUR_OF_DAY),
+                calendar.get(Calendar.MINUTE));
     }
 
     /**
@@ -128,15 +127,15 @@ public final class TimeUtil {
     }
 
     public static MyTime longToTotalMyTime(long l) {
-        int year = (int) l / 100000000;
-        l -= year * 100000000;
-        int month = (int) l / 1000000;
-        l -= month * 1000000;
-        int day = (int) l / 10000;
-        l -= day * 10000;
-        int hour = (int) l / 100;
-        l -= hour * 100;
-        int minute = (int) l;
-        return new MyTime(year, month, day, hour, minute);
+        long year = l / 100000000L;
+        l -= year * 100000000L;
+        long month = l / 1000000L;
+        l -= month * 1000000L;
+        long day = l /10000L;
+        l -= day * 10000L;
+        long hour = l / 100L;
+        l -= hour * 100L;
+        long minute = l;
+        return new MyTime((int)year, (int)month, (int)day, (int)hour, (int)minute);
     }
 }

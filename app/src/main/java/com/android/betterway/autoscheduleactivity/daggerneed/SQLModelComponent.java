@@ -2,6 +2,7 @@ package com.android.betterway.autoscheduleactivity.daggerneed;
 
 import com.android.betterway.autoscheduleactivity.model.SQLModel;
 import com.android.betterway.autoscheduleactivity.present.AutoSchedulePresenterImpel;
+import com.android.betterway.showscheduleactivity.Impel.ShowScheduleImpel;
 
 import dagger.Component;
 
@@ -13,11 +14,10 @@ import dagger.Component;
 @Component (modules = SQLModelModule.class)
 public interface SQLModelComponent {
     /**
-     * 注入SQLmodel
-     * @param autoSchedulePresenterImpel 注入的对象
+     * 注入ShowScheduleImpel
+     * @param showScheduleImpel 需要注入的ShowScheduleImpel
      */
-    void inject(AutoSchedulePresenterImpel autoSchedulePresenterImpel);
-
+    void inject(ShowScheduleImpel showScheduleImpel);
     /**
      * 获得注入的SQLModel
      * @return 注入的SQLModel

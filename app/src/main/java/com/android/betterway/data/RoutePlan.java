@@ -33,7 +33,6 @@ public class RoutePlan extends Plan {
     }
     public NewPlan convertToNewPlan() {
         NewPlan newPlan = new NewPlan();
-        newPlan.setEditFinishTime(editFinishTime);
         newPlan.setType(type);
         newPlan.setMoneySpend(getMoneySpend());
         newPlan.setStayMinutes(getStayMinutes());
