@@ -38,29 +38,30 @@ public class ScheduleMapFragment extends Fragment {
     MapView mMapShow;
     Unbinder unbinder;
     private AMap mAMap;
+    List<LatLng> mLatLngList;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_schedule_map, container, false);
         unbinder = ButterKnife.bind(this, view);
         mMapShow.onCreate(savedInstanceState);
+        mLatLngList = this.getArguments().getParcelableArrayList("latlnglist");
         initMap();
-        List<LatLng> mLatLngList = this.getArguments().getParcelableArrayList("latlnglist");
-        initLatLng(mLatLngList);
+        initLatLng();
         return view;
     }
 
     /**
      * 初始化坐标
-     * @param latLngs 需要初始化的坐标List
      */
-    private void initLatLng(List<LatLng> latLngs) {
-        for (int i = 0; i < latLngs.size(); i++) {
+    private void initLatLng() {
+        for (int i = 0; i < mLatLngList.size(); i++) {
             Marker marker = mAMap.addMarker(new MarkerOptions());
-            marker.setPosition(latLngs.get(i));
-            marker.setTitle(String.valueOf(i));
+            marker.setPosition(mLatLngList.get(i));
+            marker.setTitle(String.valueOf(i + 1));
+            mAMap.moveCamera(CameraUpdateFactory.changeLatLng(mLatLngList.get(0)));
+            mAMap.moveCamera(CameraUpdateFactory.zoomTo(13));
         }
-        mAMap.moveCamera(CameraUpdateFactory.changeLatLng(latLngs.get(0)));
     }
 
     /**
@@ -70,7 +71,7 @@ public class ScheduleMapFragment extends Fragment {
         if (mAMap == null) {
             mAMap = mMapShow.getMap();
         }
-        mAMap.getUiSettings().setZoomControlsEnabled(false);
+        //mAMap.getUiSettings().setZoomControlsEnabled(false);
     }
     @Override
     public void onDestroyView() {
@@ -96,4 +97,5 @@ public class ScheduleMapFragment extends Fragment {
         super.onPause();
         mMapShow.onPause();
     }
+
 }

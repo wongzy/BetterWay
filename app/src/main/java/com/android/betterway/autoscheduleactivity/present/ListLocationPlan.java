@@ -17,6 +17,7 @@ import com.amap.api.services.route.WalkRouteResult;
 import com.android.betterway.data.LocationPlan;
 import com.android.betterway.data.Plan;
 import com.android.betterway.data.RoutePlan;
+import com.android.betterway.other.ActivityType;
 import com.android.betterway.utils.LatLngUtil;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
@@ -60,7 +61,8 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
      * @param type 出行方式类型
      * @param location 查询城市的名称
      */
-    public void getLocationPlanList(List<LocationPlan> locationPlanList, int type, String location) {
+    public void getLocationPlanList(final List<LocationPlan> locationPlanList, int type, String location, int i) {
+        final int j = i;
         number = locationPlanList.size() * 2 - 1;
         final List<LocationPlan> locationPlans = locationPlanList;
         final int mtype = type;
@@ -68,7 +70,11 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
         io.reactivex.Observable.create(new ObservableOnSubscribe<List<LocationPlan>>() {
             @Override
             public void subscribe(ObservableEmitter<List<LocationPlan>> e) throws Exception {
-                e.onNext(sortLocationPlanList(locationPlans));
+                if (j == 1) {
+                    e.onNext(sortLocationPlanList(locationPlans));
+                } else {
+                    e.onNext(notSortLocationPlanList(locationPlans));
+                }
             }
         }).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -80,6 +86,10 @@ public class ListLocationPlan extends Observable implements RouteSearch.OnRouteS
                 });
     }
 
+    private List<LocationPlan> notSortLocationPlanList(List<LocationPlan> plans) {
+        sortedList.addAll(plans);
+        return plans;
+    }
     /**
      * 查询两个地点之间路程
      * @param locationPlanList 地点List

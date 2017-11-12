@@ -61,4 +61,6 @@ public interface AutoScheduleView {
      * @return 日期
      */
     long getDateLong();
+
+    int returnType();
 }

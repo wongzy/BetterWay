@@ -51,6 +51,7 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
     private static final int BIKE = 1;
     private static final int BUS = 2;
     private static final int CAR = 3;
+    private int type;
     private WeakHashMap<String,WeakReference<Context>> mWeakHashMap = new WeakHashMap<>();
     @BindString(R.string.location_text_default)
     String defaultString;
@@ -325,4 +326,12 @@ public class AutoScheduleMainFragment extends Fragment implements AutoScheduleVi
         return datelong;
     }
 
+    public void setType(int i) {
+        type = i;
+    }
+
+    @Override
+    public int returnType() {
+        return type;
+    }
 }

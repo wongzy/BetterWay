@@ -28,6 +28,7 @@ import butterknife.ButterKnife;
 public class AutoScheduleActivity extends AppCompatActivity {
     @BindView(R.id.toolbar_auto_schedule)
     Toolbar mToolbarAutoSchedule;
+    private int type;
     private long datelong;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +48,9 @@ public class AutoScheduleActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         Intent intent = getIntent();
-
         String date = intent.getStringExtra("Date");
         datelong = intent.getLongExtra("datelong", 20171114);
+        type = intent.getIntExtra("type", 2);
         mToolbarAutoSchedule.setSubtitle(date);
     }
 
@@ -62,6 +63,7 @@ public class AutoScheduleActivity extends AppCompatActivity {
             case R.id.finish_auto:
                 AutoScheduleMainFragment autoScheduleMainFragment = (AutoScheduleMainFragment)
                         getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+                autoScheduleMainFragment.setType(type);
                 autoScheduleMainFragment.setDatelong(datelong);
                 autoScheduleMainFragment.finishPlan();
                 break;

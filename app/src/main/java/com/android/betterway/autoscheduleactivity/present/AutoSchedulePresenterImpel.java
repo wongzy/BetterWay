@@ -18,6 +18,7 @@ import com.android.betterway.data.MyTime;
 import com.android.betterway.data.NewPlan;
 import com.android.betterway.data.Plan;
 import com.android.betterway.data.RoutePlan;
+import com.android.betterway.other.ActivityType;
 import com.android.betterway.other.DeadMessage;
 import com.android.betterway.showscheduleactivity.view.ShowScheduleActivity;
 import com.android.betterway.utils.LogUtil;
@@ -93,21 +94,25 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
     public void finishAddedLocationPlan(int type) {
         mAutoScheduleView.dismissBottomSheet();
         mListLocationPlan.setContext(mAutoScheduleView.returnContext());
+        int j = mAutoScheduleView.returnType();
         switch (type) {
             case BIKE:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                        .getLocationPlanList(), BIKE, mAutoScheduleView.returnSearchLocation());
+                        .getLocationPlanList(), BIKE, mAutoScheduleView.returnSearchLocation(),
+                        j);
                 break;
             case BUS:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                .getLocationPlanList(), BUS, mAutoScheduleView.returnSearchLocation());
+                .getLocationPlanList(), BUS, mAutoScheduleView.returnSearchLocation(),
+                        j);
                 break;
             case CAR:
                 mAutoScheduleView.showProgressDialog();
                 mListLocationPlan.getLocationPlanList(mAutoScheduleView.getLocationPlanAdapter()
-                .getLocationPlanList(), CAR, mAutoScheduleView.returnSearchLocation());
+                .getLocationPlanList(), CAR, mAutoScheduleView.returnSearchLocation(),
+                        j);
                 break;
             default:
                 break;

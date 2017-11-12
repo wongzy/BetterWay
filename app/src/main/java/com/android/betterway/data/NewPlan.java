@@ -138,6 +138,8 @@ public class NewPlan implements Parcelable{
         dest.writeInt(stayMinutes);
         dest.writeInt(type);
         dest.writeString(statement);
+        dest.writeDouble(Lat);
+        dest.writeDouble(Lon);
     }
     public static final Parcelable.Creator<NewPlan> CREATOR = new Parcelable.Creator<NewPlan>() {
         @Override
@@ -149,6 +151,8 @@ public class NewPlan implements Parcelable{
             newPlan.stayMinutes = source.readInt();
             newPlan.type = source.readInt();
             newPlan.statement = source.readString();
+            newPlan.Lat = source.readDouble();
+            newPlan.Lon = source.readDouble();
             return newPlan;
         }
 

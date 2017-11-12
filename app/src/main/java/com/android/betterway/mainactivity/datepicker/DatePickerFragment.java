@@ -13,7 +13,6 @@ import android.view.Window;
 import android.widget.DatePicker;
 
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleActivity;
-import com.android.betterway.normalscheduleactivity.view.NormalScheduleActivity;
 import com.android.betterway.R;
 import com.android.betterway.other.ActivityType;
 import com.android.betterway.utils.LogUtil;
@@ -52,15 +51,20 @@ public class DatePickerFragment extends DialogFragment {
                                         + "月" + datePicker.getDayOfMonth() + "日";
                                 intent.putExtra("Date", date);
                                 intent.putExtra("datelong", datelong);
+                                intent.putExtra("type",1);
                                 startActivity(intent);
                                 break;
                             case ADDMORNALACTIVITY:
                                 LogUtil.v(TAG, "add mornalActitity");
                                 Intent intent1 = new Intent(getActivity()
-                                        .getApplicationContext(), NormalScheduleActivity.class);
+                                        .getApplicationContext(), AutoScheduleActivity.class);
+                                long datelong1 = (long) ((datePicker.getYear() * 10000
+                                        + (datePicker.getMonth() + 1 ) * 100 +datePicker.getDayOfMonth()));
                                 String date1 = datePicker.getYear() + "年" + (datePicker.getMonth() + 1)
                                         + "月" + datePicker.getDayOfMonth() + "日";
                                 intent1.putExtra("Date", date1);
+                                intent1.putExtra("datelong", datelong1);
+                                intent1.putExtra("type",2);
                                 startActivity(intent1);
                                 break;
                             default:
