@@ -106,14 +106,19 @@ public final class TimeUtil {
         return new MyDate(year, month, day);
     }
 
-    /**
-     * 将日期类转化为long格式
-     * @param myDate 日期类
-     * @return long
-     */
-    public static long mydateToLong(MyDate myDate) {
-        Date date = new Date(myDate.getYear(), myDate.getMonth(), myDate.getDay());
-        return date.getTime();
+    public static String minteintToString(int minutes) {
+        int hour = minutes / 60;
+        int minute = minutes % 60;
+        StringBuffer stringBuffer = new StringBuffer("");
+        if (hour > 0) {
+            String Hour = hour + "小时";
+            stringBuffer.append(Hour);
+        }
+        if (minute > 0) {
+            String Minute = minute + "分钟";
+            stringBuffer.append(Minute);
+        }
+        return stringBuffer.toString();
     }
 
     public static int SecondsToMinutes(int seconds) {

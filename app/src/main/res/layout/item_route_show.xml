@@ -9,7 +9,7 @@
     <LinearLayout
         android:baselineAligned="false"
         android:orientation="horizontal"
-        android:weightSum="13"
+        android:weightSum="12"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <FrameLayout
@@ -19,17 +19,18 @@
             <ImageView
                 android:layout_width="3dp"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
+                android:layout_gravity="end"
                 android:layout_margin="5dp"
                 android:background="@android:color/holo_blue_bright"
                 android:contentDescription="@string/route_line"/>
         </FrameLayout>
         <LinearLayout
             android:orientation="vertical"
-            android:layout_weight="12"
+            android:layout_weight="11"
             android:layout_width="0dp"
             android:layout_height="wrap_content">
             <LinearLayout
+                android:padding="3dp"
                 android:id="@+id/way_fee_layout"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
@@ -59,6 +60,7 @@
                     android:textStyle="bold"/>
             </LinearLayout>
             <LinearLayout
+                android:padding="3dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -88,6 +90,7 @@
                     android:textStyle="bold"/>
             </LinearLayout>
             <LinearLayout
+                android:padding="3dp"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">

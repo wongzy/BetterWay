@@ -7,6 +7,7 @@ import com.android.betterway.autoscheduleactivity.daggerneed.SQLModelModule;
 import com.android.betterway.autoscheduleactivity.model.SQLModel;
 import com.android.betterway.data.NewPlan;
 import com.android.betterway.data.Schedule;
+import com.android.betterway.showscheduleactivity.view.ShowScheduleActivity;
 import com.android.betterway.showscheduleactivity.view.ShowScheduleView;
 import com.android.betterway.utils.LogUtil;
 
@@ -31,8 +32,9 @@ public class ShowScheduleImpel {
     private ArrayList<LatLng> mLatLngList;
     private SQLModel mSQLModel;
     private final long finishtime;
+    private String city;
     private ShowScheduleView mShowScheduleView;
-    public ShowScheduleImpel(ShowScheduleView showScheduleView) {
+    public ShowScheduleImpel(ShowScheduleView showScheduleView, String city) {
         mShowScheduleView = showScheduleView;
         SQLModelComponent modelComponent = DaggerSQLModelComponent.builder()
                 .sQLModelModule(new SQLModelModule(mShowScheduleView.returnContext()))
@@ -40,9 +42,10 @@ public class ShowScheduleImpel {
         modelComponent.inject(this);
         mSQLModel = modelComponent.getSQLModel();
         finishtime = new Date().getTime();
+        this.city = city;
     }
 
-    public void initData(ArrayList<NewPlan> newPlanList) {
+    public void initData(ArrayList<NewPlan> newPlanList, int weatherSrore) {
         mNewPlanList = newPlanList;
         mLatLngList = new ArrayList<LatLng>();
         for (NewPlan newPlan : newPlanList) {
@@ -51,7 +54,9 @@ public class ShowScheduleImpel {
                mLatLngList.add(latLng);
            }
         }
-        storePlansAndStoreSchedule(newPlanList);
+        if (weatherSrore == ShowScheduleActivity.NEW) {
+            storePlansAndStoreSchedule(newPlanList);
+        }
     }
 
     public ArrayList<NewPlan> getNewPlanList() {
@@ -72,20 +77,23 @@ public class ShowScheduleImpel {
             @Override
             public void subscribe(ObservableEmitter<Schedule> e) throws Exception {
                 long startTime = 0;
-                String location = "";
+                StringBuffer location = new StringBuffer("");
                 int spendTime = 0, spendMoney = 0;
                 for (int i = 0; i < newPlans.size(); i++) {
                     NewPlan newPlan = newPlans.get(i);
                     if (i == 0) {
                         startTime = newPlan.getStartTime();
-                        location = newPlan.getLocation();
+                        location.append(newPlan.getLocation());
+                    } else {
+                        String templocation = "-" + newPlan.getLocation();
+                        location.append(templocation);
                     }
                     spendMoney += newPlan.getMoneySpend();
                     spendTime += newPlan.getStayMinutes();
                     newPlan.setEditFinishTime(finishtime);
                 }
                 mSQLModel.insertAllPlan(newPlans);
-                Schedule schedule = new Schedule(finishtime, startTime, location, spendTime, spendMoney);
+                Schedule schedule = new Schedule(finishtime, startTime, location.toString(), city, spendTime, spendMoney);
                 e.onNext(schedule);
             }
         }).subscribeOn(Schedulers.io())
@@ -96,5 +104,9 @@ public class ShowScheduleImpel {
                         mSQLModel.insertSchedule(schedule);
                     }
                 });
+    }
+
+    public void deleteSchedule() {
+        mSQLModel.deleteSchedule(finishtime);
     }
 }

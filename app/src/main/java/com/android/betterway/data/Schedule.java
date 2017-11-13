@@ -21,14 +21,17 @@ public  class Schedule {
     @NotNull
     private long  startTime;
     private String location;
+    @NotNull
+    private String city;
     private int spendTime;
     private int spendMoney;
-    @Generated(hash = 1710414451)
+    @Generated(hash = 1010263914)
     public Schedule(long editFinishTime, long startTime, String location,
-            int spendTime, int spendMoney) {
+            @NotNull String city, int spendTime, int spendMoney) {
         this.editFinishTime = editFinishTime;
         this.startTime = startTime;
         this.location = location;
+        this.city = city;
         this.spendTime = spendTime;
         this.spendMoney = spendMoney;
     }
@@ -53,6 +56,12 @@ public  class Schedule {
     public void setLocation(String location) {
         this.location = location;
     }
+    public String getCity() {
+        return this.city;
+    }
+    public void setCity(String city) {
+        this.city = city;
+    }
     public int getSpendTime() {
         return this.spendTime;
     }
@@ -65,6 +74,4 @@ public  class Schedule {
     public void setSpendMoney(int spendMoney) {
         this.spendMoney = spendMoney;
     }
-
-    
 }

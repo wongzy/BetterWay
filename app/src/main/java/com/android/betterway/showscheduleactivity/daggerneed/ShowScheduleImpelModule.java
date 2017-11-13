@@ -14,8 +14,10 @@ import dagger.Provides;
 @Module
 public class ShowScheduleImpelModule {
     private ShowScheduleView mShowScheduleView;
-    public ShowScheduleImpelModule(ShowScheduleView showScheduleView) {
+    private String city;
+    public ShowScheduleImpelModule(ShowScheduleView showScheduleView, String city) {
         mShowScheduleView = showScheduleView;
+        this.city = city;
     }
 
     @Provides
@@ -24,7 +26,12 @@ public class ShowScheduleImpelModule {
     }
 
     @Provides
-    ShowScheduleImpel getShowScheduleImpel(ShowScheduleView showScheduleView) {
-        return new ShowScheduleImpel(showScheduleView);
+    String getCity() {
+        return city;
+    }
+
+    @Provides
+    ShowScheduleImpel getShowScheduleImpel(ShowScheduleView showScheduleView, String city) {
+        return new ShowScheduleImpel(showScheduleView, city);
     }
 }

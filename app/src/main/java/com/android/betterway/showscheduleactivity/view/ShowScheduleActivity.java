@@ -1,6 +1,7 @@
 package com.android.betterway.showscheduleactivity.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -39,10 +41,10 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
     AppBarLayout mAppbar;
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
-    private long key;
     private ShowScheduleImpel mShowScheduleImpel;
     private ScheduleDetailFragment mScheduleDetailFragment;
     private ScheduleMapFragment mScheduleMapFragment;
+    public static int NEW = 101, OLD = 102;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,15 +64,16 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
         Intent intent = getIntent();
         ArrayList<NewPlan> newPlans = intent.getParcelableArrayListExtra("list");
         long date = intent.getLongExtra("datelong", 20171111);
+        int weatherStore = intent.getIntExtra("weatherStore", 101);
         MyDate myDate = TimeUtil.intToMyDate((int)date);
         String city = intent.getStringExtra("city");
         mToolbarShowSchedule.setSubtitle(myDate.toSingleString() + "(" + city + ")");
         ShowScheduleImpelCompont showScheduleImpelCompont = DaggerShowScheduleImpelCompont.builder()
-                .showScheduleImpelModule(new ShowScheduleImpelModule(this))
+                .showScheduleImpelModule(new ShowScheduleImpelModule(this, city))
                 .build();
         showScheduleImpelCompont.inject(this);
         mShowScheduleImpel = showScheduleImpelCompont.getShowScheduleImpel();
-        mShowScheduleImpel.initData(newPlans);
+        mShowScheduleImpel.initData(newPlans, weatherStore);
         Bundle bundleDetail = new Bundle();
         bundleDetail.putParcelableArrayList("NewPlanList", mShowScheduleImpel.getNewPlanList());
         mScheduleDetailFragment = new ScheduleDetailFragment();
@@ -116,17 +119,23 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
             case R.id.share:
                 break;
             case R.id.delete:
+                AlertDialog dialog = new AlertDialog.Builder(this)
+                        .setMessage("确定要删除此路书吗？")
+                        .setNegativeButton("取消", null)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                mShowScheduleImpel.deleteSchedule();
+                                finish();
+                            }
+                        })
+                        .create();
+                dialog.show();
                 break;
             default:
                 break;
         }
         return false;
-    }
-
-    @Override
-    public long getEditFinishTime() {
-        LogUtil.i("ShowScheduleActivity", "key = " + key);
-        return key;
     }
 
     @Override

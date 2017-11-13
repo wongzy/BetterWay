@@ -46,6 +46,8 @@
     <string name="fee">车费</string>
     <string name="cost_time">耗时</string>
     <string name="go_way">出行方式</string>
+    <string name="schedule_location_list"> 行程安排 </string>
+    <string name="click_to_details">点击查看详情</string>
     <string-array name="time">
         <item>5分钟</item>
         <item>15分钟</item>

@@ -10,11 +10,6 @@ import android.graphics.Bitmap;
  */
 
 public interface ShowScheduleView {
-    /**
-     * 获得日期的key
-     * @return key
-     */
-    long getEditFinishTime();
 
     /**
      * 获得截图

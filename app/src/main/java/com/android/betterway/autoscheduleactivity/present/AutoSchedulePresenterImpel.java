@@ -2,14 +2,9 @@ package com.android.betterway.autoscheduleactivity.present;
 
 
 import android.content.Intent;
-import android.util.Log;
 
 import com.android.betterway.autoscheduleactivity.daggerneed.DaggerListLocationPlanComponent;
-import com.android.betterway.autoscheduleactivity.daggerneed.DaggerSQLModelComponent;
 import com.android.betterway.autoscheduleactivity.daggerneed.ListLocationPlanComponent;
-import com.android.betterway.autoscheduleactivity.daggerneed.SQLModelComponent;
-import com.android.betterway.autoscheduleactivity.daggerneed.SQLModelModule;
-import com.android.betterway.autoscheduleactivity.model.SQLModel;
 import com.android.betterway.autoscheduleactivity.view.AutoScheduleView;
 import com.android.betterway.data.DaoMaster;
 import com.android.betterway.data.DaoSession;
@@ -60,7 +55,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                 DaggerListLocationPlanComponent.builder().build();
         listLocationPlanComponent.inject(this);
         mListLocationPlan = listLocationPlanComponent.getListLocationPlan();
-        mListLocationPlan.addObserver(this);;
+        mListLocationPlan.addObserver(this);
     }
 
     @Override
@@ -169,6 +164,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                         intent.putParcelableArrayListExtra("list", list);
                         intent.putExtra("datelong", mAutoScheduleView.getDateLong());
                         intent.putExtra("city", mAutoScheduleView.returnSearchLocation());
+                        intent.putExtra("weatherStore", ShowScheduleActivity.NEW);
                         mAutoScheduleView.dismissProgressDialog();
                         mAutoScheduleView.returnContext().startActivity(intent);
                         postDeadMessage(DeadMessage.FINISH);

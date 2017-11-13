@@ -5,15 +5,28 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import com.android.betterway.data.MyDate;
+import com.android.betterway.data.NewPlan;
+import com.android.betterway.data.Schedule;
 import com.android.betterway.mainactivity.model.MainModel;
 import com.android.betterway.mainactivity.view.MainView;
 import com.android.betterway.network.image.ImageDownload;
 import com.android.betterway.settingactivity.view.SettingActivity;
+import com.android.betterway.showscheduleactivity.view.ShowScheduleActivity;
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -25,17 +38,10 @@ import javax.inject.Inject;
 public class MainPresenterImpel implements MainPresenter {
     private static final String TAG = "MainPresenterImpel";
     private final MainView mMainView;
-
+    private List<Schedule> mScheduleList;
     @Inject
     public MainPresenterImpel(MainView mainView) {
         mMainView = mainView;
-    }
-    @Override
-    public void addNormalSchedule() {
-    }
-
-    @Override
-    public void addAutoSchedule() {
     }
 
     @Override
@@ -45,18 +51,38 @@ public class MainPresenterImpel implements MainPresenter {
         activity.startActivity(intent);
     }
 
+    public List<Schedule> getScheduleList() {
+        MainModel mainModel = MainModel.getInstance();
+        mScheduleList = mainModel.inquiryAllSchedule(mMainView.getActivity().getApplicationContext());
+        return mScheduleList;
+    }
     @Override
     public void choseSchedule(int position) {
-    }
-
-    @Override
-    public void deleteSchedule(int position) {
-
-    }
-
-    @Override
-    public boolean isModalEmpty() {
-        return false;
+        final int count = position;
+        Observable.create(new ObservableOnSubscribe<Intent>() {
+            @Override
+            public void subscribe(ObservableEmitter<Intent> e) throws Exception {
+                Schedule schedule = mScheduleList.get(count);
+                long date = schedule.getStartTime() / 10000L;
+                String city = schedule.getCity();
+                MainModel mainModel = MainModel.getInstance();
+                ArrayList<NewPlan> newPlans = mainModel.inquiryPlans(schedule.getEditFinishTime(),
+                        mMainView.getActivity().getApplicationContext());
+                Intent intent = new Intent(mMainView.getActivity(), ShowScheduleActivity.class);
+                intent.putExtra("list", newPlans);
+                intent.putExtra("datelong", date);
+                intent.putExtra("city", city);
+                intent.putExtra("weatherStore", ShowScheduleActivity.OLD);
+                e.onNext(intent);
+            }
+        }).observeOn(Schedulers.io())
+                .subscribeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<Intent>() {
+                    @Override
+                    public void accept(Intent intent) throws Exception {
+                        mMainView.getActivity().startActivity(intent);
+                    }
+                });
     }
 
     @Override

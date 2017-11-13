@@ -4,6 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.android.betterway.R;
+import com.android.betterway.data.DaoMaster;
+import com.android.betterway.data.DaoSession;
+import com.android.betterway.data.NewPlan;
+import com.android.betterway.data.NewPlanDao;
+import com.android.betterway.data.Schedule;
+import com.android.betterway.data.ScheduleDao;
+import com.android.betterway.utils.LogUtil;
+
+import java.util.ArrayList;
+
+import butterknife.BindString;
+
 /**
  * @author Jackdow
  * @version 1.0
@@ -11,6 +24,11 @@ import android.content.SharedPreferences;
  */
 
 public final class MainModel {
+    @BindString(R.string.newplan_db)
+    String newPlandb;
+    @BindString(R.string.schedule_db)
+    String scheduledb;
+    private static final String TAG = "MianModel";
     private static final String PREFERENCE = "com.android.betterway_preferences";
     private SharedPreferences sharedPreferences;
     private MainModel() {
@@ -49,5 +67,34 @@ public final class MainModel {
      */
     private static class MainModelHolder {
         private static final MainModel INSTANCE = new MainModel();
+    }
+    /**
+     * 查询计划
+     * @param key 计划对应的关键字
+     * @return 查询到的计划
+     */
+    public ArrayList<NewPlan> inquiryPlans(long key, Context mContext) {
+        DaoMaster.DevOpenHelper devOpenHelpernewPlan = new DaoMaster.DevOpenHelper(mContext, newPlandb);
+        DaoSession newPlanSession = new DaoMaster(devOpenHelpernewPlan.getWritableDb()).newSession();
+        NewPlanDao planDao = newPlanSession.getNewPlanDao();
+        ArrayList<NewPlan> planList = new ArrayList<>();
+        planList.addAll(planDao.queryBuilder().where(NewPlanDao.Properties.EditFinishTime.eq(key))
+                .orderAsc(NewPlanDao.Properties.Order)
+                .list());
+        LogUtil.d(TAG, planList.size() + "条");
+        return planList;
+    }
+
+    /**
+     * 查询所有的路书
+     * @return 路书集合
+     */
+    public ArrayList<Schedule> inquiryAllSchedule(Context mContext) {
+        ArrayList<Schedule> schedules = new ArrayList<Schedule>();
+        DaoMaster.DevOpenHelper devOpenHelperschedule = new DaoMaster.DevOpenHelper(mContext, scheduledb);
+        DaoSession scheduleSesssion = new DaoMaster(devOpenHelperschedule.getWritableDb()).newSession();
+        ScheduleDao scheduleDao = scheduleSesssion.getScheduleDao();
+        schedules.addAll(scheduleDao.queryBuilder().build().list());
+        return schedules;
     }
 }
