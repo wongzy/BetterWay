@@ -1,7 +1,5 @@
 <resources>
-    <string name="app_name">BetterWay</string>
-    <string name="add_smartschedule">自动规划路径</string>
-    <string name="add_nomalschedule">自定义计划</string>
+    <string name="app_name">路书</string>
     <string name="setting">设置</string>
     <string name="background">背景</string>
     <string name="warning_setting">提醒设置</string>
@@ -12,23 +10,18 @@
     <string name="use_local_image">使用本地壁纸</string>
     <string name="weather_change_online">联网更新壁纸</string>
     <string name="change_duration">更新时间间隔</string>
-    <string name="sharedPreferenceName">com.android.betterway_preferences</string>
-    <string name="time_default">5</string>
+    <string name="time_default">15</string>
     <string name="datepicker_title">请选择日期</string>
     <string name="button_sure">确定</string>
     <string name="button_cancel">取消</string>
     <string name="location_text_default">请选择地点</string>
     <string name="finish_activity">完成</string>
-    <string name="clean_all">清空</string>
-    <string name="add_start_location">点击添加起点位置</string>
     <string name="input_location">请输入地点</string>
     <string name="input_thing">请输入事件内容简述</string>
     <string name="input_start_time">开始时间</string>
     <string name="input_spend_money">请输入消费金额</string>
     <string name="input_spend_time">请输入耗费时间（单位：分钟）</string>
     <string name="input_keyword">请输入地点关键字</string>
-    <string name="test_name">武汉工程大学</string>
-    <string name="test_address">武汉市江夏区流芳大道特一号</string>
     <string name="addlocation">点击添加地点</string>
     <string name="use_bycircle">骑单车出行</string>
     <string name="use_car_or_taxi">驾车或出租车出行</string>
@@ -39,8 +32,6 @@
     <string name="schedule_tool_bar_title">查看</string>
     <string name="schedule_detail">详情</string>
     <string name="schedule_map">地图</string>
-    <string name="share_to_friend">分享给好友</string>
-    <string name="finish_look">完成</string>
     <string name="delete_this_schedule">删除此路书</string>
     <string name="route_line">路径线</string>
     <string name="fee">车费</string>
@@ -71,5 +62,7 @@
     </string-array>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!-- TODO: remove this placeholder text -->
+
 </resources>

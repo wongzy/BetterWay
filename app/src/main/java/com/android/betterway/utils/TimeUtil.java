@@ -7,6 +7,9 @@ import com.android.betterway.data.MyTime;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -60,21 +63,17 @@ public final class TimeUtil {
         return i;
     }
 
-    /**
-     * 获得两个时间之间相隔的分钟数
-     * @param startTime 开始时间
-     * @param endTime 结束时间
-     * @return 相隔分钟
-     */
-    public static long getTimeDuration(MyTime startTime, MyTime endTime) {
-        int duration;
-        if (startTime.getYear() == endTime.getYear() && startTime.getMonth() == endTime.getMonth()
-                && startTime.getDay() == endTime.getDay()) {
-            duration = endTime.getMinute() - startTime.getMinute() + (endTime.getHour() - startTime.getHour()) * 60;
-        } else {
-            duration = ERRORCOUNT;
+
+    public static boolean getTimeDuration(List<Long> longs, int duration) {
+        MyTime myTime = getMinuteTime();
+        long longmytime = myTime.getTotalLong();
+        for (long i : longs) {
+            long temp = longmytime - i;
+            if (temp > 0 && temp < duration) {
+                return true;
+            }
         }
-        return duration;
+        return false;
     }
 
     /**
@@ -142,5 +141,16 @@ public final class TimeUtil {
         l -= hour * 100L;
         long minute = l;
         return new MyTime((int)year, (int)month, (int)day, (int)hour, (int)minute);
+    }
+
+    public static String longToTimeString(long i) {
+        String l = String.valueOf(i);
+        String[] temp = l.split("");
+        String year = temp[1] +temp[2] +temp[3] + temp[4];
+        String month = temp[5] + temp[6];
+        String day = temp[7] + temp[8];
+        String hour = temp[9] + temp[10];
+        String minute = temp[11] + temp[12];
+        return year + '/' + month + '/' + day + ' ' + hour + ':' + minute;
     }
 }

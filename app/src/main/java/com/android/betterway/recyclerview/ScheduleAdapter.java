@@ -63,14 +63,11 @@ public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHo
     public void onBindViewHolder(ViewHolder holder, int position) {
         final int count = position;
         Schedule schedule = mScheduleList.get(position);
-        MyTime startmytime = TimeUtil.longToTotalMyTime(schedule.getStartTime());
-        String starttime = startmytime.getYear() + '/' + startmytime.getMonth() + '/'
-                + startmytime.getDay() + ' '+ startmytime.getSingleTime();
-        holder.startTime.setText(starttime);
+        holder.startTime.setText(TimeUtil.longToTimeString(schedule.getStartTime()));
         holder.city.setText(schedule.getCity());
         holder.locationList.setText(schedule.getLocation());
         holder.spendTime.setText(TimeUtil.minteintToString(schedule.getSpendTime()));
-        holder.spendMoney.setText(schedule.getSpendMoney());
+        holder.spendMoney.setText(String.valueOf(schedule.getSpendMoney()));
         holder.clickToDetails.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -1,5 +1,8 @@
 package com.android.betterway.data;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.NotNull;
@@ -15,9 +18,9 @@ import org.greenrobot.greendao.annotation.Generated;
  *          BetterWay
  */
 @Entity
-public  class Schedule {
+public  class Schedule  implements Parcelable{
     @Id
-    private long editFinishTime;
+    private Long editFinishTime;
     @NotNull
     private long  startTime;
     private String location;
@@ -25,8 +28,8 @@ public  class Schedule {
     private String city;
     private int spendTime;
     private int spendMoney;
-    @Generated(hash = 1010263914)
-    public Schedule(long editFinishTime, long startTime, String location,
+    @Generated(hash = 1678300761)
+    public Schedule(Long editFinishTime, long startTime, String location,
             @NotNull String city, int spendTime, int spendMoney) {
         this.editFinishTime = editFinishTime;
         this.startTime = startTime;
@@ -38,10 +41,10 @@ public  class Schedule {
     @Generated(hash = 729319394)
     public Schedule() {
     }
-    public long getEditFinishTime() {
+    public Long getEditFinishTime() {
         return this.editFinishTime;
     }
-    public void setEditFinishTime(long editFinishTime) {
+    public void setEditFinishTime(Long editFinishTime) {
         this.editFinishTime = editFinishTime;
     }
     public long getStartTime() {
@@ -74,4 +77,28 @@ public  class Schedule {
     public void setSpendMoney(int spendMoney) {
         this.spendMoney = spendMoney;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(startTime);
+    }
+
+    public static final Parcelable.Creator<Schedule> CREATOR = new Creator<Schedule>() {
+        @Override
+        public Schedule createFromParcel(Parcel source) {
+            Schedule schedule = new Schedule();
+            schedule.setStartTime(source.readLong());
+            return schedule;
+        }
+
+        @Override
+        public Schedule[] newArray(int size) {
+            return new Schedule[size];
+        }
+    };
 }

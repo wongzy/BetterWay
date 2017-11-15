@@ -53,7 +53,8 @@ public class MainPresenterImpel implements MainPresenter {
 
     public List<Schedule> getScheduleList() {
         MainModel mainModel = MainModel.getInstance();
-        mScheduleList = mainModel.inquiryAllSchedule(mMainView.getActivity().getApplicationContext());
+        mScheduleList = mainModel.inquiryAllSchedule(mMainView.getActivity().getApplication());
+        LogUtil.i(TAG, "size = " + mScheduleList.size());
         return mScheduleList;
     }
     @Override
@@ -67,12 +68,13 @@ public class MainPresenterImpel implements MainPresenter {
                 String city = schedule.getCity();
                 MainModel mainModel = MainModel.getInstance();
                 ArrayList<NewPlan> newPlans = mainModel.inquiryPlans(schedule.getEditFinishTime(),
-                        mMainView.getActivity().getApplicationContext());
+                        mMainView.getActivity().getApplication());
                 Intent intent = new Intent(mMainView.getActivity(), ShowScheduleActivity.class);
                 intent.putExtra("list", newPlans);
                 intent.putExtra("datelong", date);
                 intent.putExtra("city", city);
                 intent.putExtra("weatherStore", ShowScheduleActivity.OLD);
+                intent.putExtra("key", schedule.getEditFinishTime());
                 e.onNext(intent);
             }
         }).observeOn(Schedulers.io())

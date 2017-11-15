@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary">#009688</color>
-    <color name="primary_dark">#00796b</color>
-    <color name="primary_light">#b2dfdb</color>
-    <color name="accent">#00bcd4</color>
-    <color name="transparent">#00000000</color><!--透明色 -->
+    <color name="primary">#03A9F4</color>
+    <color name="primary_dark">#0288D1</color>
+    <color name="primary_light">#B3E5FC</color>
+    <color name="accent">#0288d1</color>
+    <!--透明色 -->
     <color name="primary_text">#212121</color>
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="time">#33E598</color>
-    <color name="divider">#BDBDBD</color>
     <color name="button_pressed">#0288d1</color>
 </resources>

@@ -1,5 +1,6 @@
 package com.android.betterway.showscheduleactivity.view;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 
@@ -10,12 +11,14 @@ import android.graphics.Bitmap;
  */
 
 public interface ShowScheduleView {
-
+    Application returnApplicatin();
     /**
      * 获得截图
      * @return 截图
      */
     Bitmap getScreenShot();
+
+    Context returnApplicationContext();
 
     Context returnContext();
 }

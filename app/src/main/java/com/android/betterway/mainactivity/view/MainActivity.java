@@ -1,6 +1,8 @@
 package com.android.betterway.mainactivity.view;
 
 import android.app.Activity;
+import android.app.Application;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -10,6 +12,8 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -20,6 +24,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.android.betterway.R;
+import com.android.betterway.data.Schedule;
 import com.android.betterway.mainactivity.daggerneed.DaggerMainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainActivityComponent;
 import com.android.betterway.mainactivity.daggerneed.MainPresenterImpelModule;
@@ -28,6 +33,7 @@ import com.android.betterway.mainactivity.presenter.MainPresenterImpel;
 import com.android.betterway.myview.FloatingActionButtonMenu;
 import com.android.betterway.other.ActivityType;
 import com.android.betterway.other.ButtonSwith;
+import com.android.betterway.recyclerview.ScheduleAdapter;
 import com.android.betterway.utils.StatusBarCompat;
 import com.android.betterway.utils.BitmapCompress;
 import com.android.betterway.utils.BlurUtil;
@@ -52,9 +58,11 @@ import butterknife.OnClick;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Consumer;
+import io.reactivex.internal.schedulers.ComputationScheduler;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -66,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
     private static final String TAG = "MainActivity";
     private MainPresenterImpel mMainPresenterImpel;
     private List<WeakReference<Activity>> mWeakReferenceList = new ArrayList<WeakReference<Activity>>();
+    private volatile List<Schedule> mScheduleList = new ArrayList<>();
+    private ScheduleAdapter scheduleAdapter;
     @BindColor(R.color.primary)
     int primaryColor;
     @BindView(R.id.toolbar)
@@ -118,13 +128,55 @@ public class MainActivity extends AppCompatActivity implements MainView, View.On
         LogUtil.d(TAG, "init");
         setSupportActionBar(mToolbar);
         mBlurFragment.setOnTouchListener(this);
-
+        LinearLayoutManager linearLayoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        scheduleAdapter = new ScheduleAdapter(mScheduleList);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        if (mScheduleList.size() ==0) {
+            mRecyclerView.setNestedScrollingEnabled(true);
+        } else {
+            mRecyclerView.setNestedScrollingEnabled(false);
+        }
+        new LinearSnapHelper().attachToRecyclerView(mRecyclerView);
+        mRecyclerView.setAdapter(scheduleAdapter);
+        scheduleAdapter.setAgency(new ScheduleAdapter.Agency() {
+            @Override
+            public void toDetails(int position) {
+                mMainPresenterImpel.choseSchedule(position);
+            }
+        });
     }
+
+    private void notifyList() {
+        Observable.create(new ObservableOnSubscribe<List<Schedule>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<Schedule>> e) throws Exception {
+                List<Schedule> list = mMainPresenterImpel.getScheduleList();
+                e.onNext(list);
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Schedule>>() {
+                    @Override
+                    public void accept(List<Schedule> scheduleList) throws Exception {
+                        mScheduleList.clear();
+                        mScheduleList.addAll(scheduleList);
+                        scheduleAdapter.notifyDataSetChanged();
+                        if (mScheduleList.size() ==0) {
+                            mRecyclerView.setNestedScrollingEnabled(true);
+                        } else {
+                            mRecyclerView.setNestedScrollingEnabled(false);
+                        }
+                    }
+                });
+    }
+
 
     @Override
     protected void onResume() {
         super.onResume();
         updateImage();
+        notifyList();
     }
 
     @Override

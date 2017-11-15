@@ -69,7 +69,7 @@ public class MyTime {
 
     @Override
     public String toString() {
-        return year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
+        return year + '/' + month + '/' + day + ' ' + hour + ':' + minute + "";
     }
     public String getSingleTime() {
         return hour + ":" + (minute < 10 ? "0" + minute: minute);

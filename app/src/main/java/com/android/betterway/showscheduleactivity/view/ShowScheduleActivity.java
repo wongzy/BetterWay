@@ -1,5 +1,6 @@
 package com.android.betterway.showscheduleactivity.view;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,7 +26,9 @@ import com.android.betterway.showscheduleactivity.daggerneed.ShowScheduleImpelMo
 import com.android.betterway.utils.LogUtil;
 import com.android.betterway.utils.TimeUtil;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.WeakHashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,8 +45,12 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
     private ShowScheduleImpel mShowScheduleImpel;
+    int weatherStore;
+    private WeakHashMap<String, WeakReference<Application>> mStringWeakReferenceWeakHashMap =
+            new WeakHashMap<>();
     private ScheduleDetailFragment mScheduleDetailFragment;
     private ScheduleMapFragment mScheduleMapFragment;
+    private long key;
     public static int NEW = 101, OLD = 102;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +71,10 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
         Intent intent = getIntent();
         ArrayList<NewPlan> newPlans = intent.getParcelableArrayListExtra("list");
         long date = intent.getLongExtra("datelong", 20171111);
-        int weatherStore = intent.getIntExtra("weatherStore", 101);
+        weatherStore = intent.getIntExtra("weatherStore", 101);
+        if (weatherStore == 102) {
+            key = intent.getLongExtra("key", 0);
+        }
         MyDate myDate = TimeUtil.intToMyDate((int)date);
         String city = intent.getStringExtra("city");
         mToolbarShowSchedule.setSubtitle(myDate.toSingleString() + "(" + city + ")");
@@ -116,8 +126,6 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
             case android.R.id.home:
                 finish();
                 break;
-            case R.id.share:
-                break;
             case R.id.delete:
                 AlertDialog dialog = new AlertDialog.Builder(this)
                         .setMessage("确定要删除此路书吗？")
@@ -125,7 +133,11 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                mShowScheduleImpel.deleteSchedule();
+                                if (weatherStore == NEW) {
+                                    mShowScheduleImpel.deleteSchedule();
+                                } else {
+                                    mShowScheduleImpel.delteScheduleByKey(key);
+                                }
                                 finish();
                             }
                         })
@@ -144,8 +156,13 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
     }
 
     @Override
-    public Context returnContext() {
+    public Context returnApplicationContext() {
         return getApplicationContext();
+    }
+
+    @Override
+    public Context returnContext() {
+        return this;
     }
 
     @Override
@@ -175,5 +192,16 @@ public class ShowScheduleActivity extends AppCompatActivity implements ShowSched
     @Override
     public void onTabReselected(TabLayout.Tab tab) {
 
+    }
+
+    @Override
+    public Application returnApplicatin() {
+        if (mStringWeakReferenceWeakHashMap.get("application") == null) {
+            WeakReference<Application> weakReference = new WeakReference<Application>(getApplication());
+            mStringWeakReferenceWeakHashMap.put("application", weakReference);
+            return weakReference.get();
+        } else {
+            return mStringWeakReferenceWeakHashMap.get("application").get();
+        }
     }
 }

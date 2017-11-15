@@ -3,9 +3,16 @@ package com.android.betterway.settingactivity.view;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.os.Message;
+import android.os.Messenger;
+import android.os.RemoteException;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -17,6 +24,7 @@ import android.view.ViewGroup;
 
 
 import com.android.betterway.R;
+import com.android.betterway.myservice.MyService;
 import com.android.betterway.settingactivity.daggerneed.DaggerSettingFragmentComponent;
 import com.android.betterway.settingactivity.daggerneed.SettingFragmentComponent;
 import com.android.betterway.settingactivity.daggerneed.SettingFragmentModule;
@@ -88,7 +96,7 @@ public class SettingFragment extends PreferenceFragment implements SettingView, 
      * 初始化summary
      */
     private void initData() {
-        LogUtil.v(TAG, "iniData");
+        LogUtil.v(TAG, "initData");
         Observable.create(new ObservableOnSubscribe<String>() {
             @Override
             public void subscribe(@NonNull ObservableEmitter<String> e) throws Exception {
@@ -210,7 +218,36 @@ public class SettingFragment extends PreferenceFragment implements SettingView, 
             int index = listPreference.findIndexOfValue((String) newValue);
             //把listPreference中的摘要显示为当前ListPreference的实体内容中选择的那个项目
             listPreference.setSummary(entries[index]);
+            if (preference.getKey().equals("warning_time")) {
+                int i = Integer.parseInt( listPreference.getEntryValues()[index].toString());
+                postMessage(MyService.DURATION_CHANGE_KEY, MyService.DURATION_CHANGE, i);
+            }
         }
         return true;
+    }
+    private void postMessage(final String key , final int what, final int value) {
+        Intent intent = new Intent(getContext(), MyService.class);
+        ServiceConnection serviceConnection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName name, IBinder service) {
+                Messenger messenger = new Messenger(service);
+                Message message = Message.obtain(null, what);
+                Bundle bundle = new Bundle();
+                bundle.putInt(key, value);
+                message.setData(bundle);
+                try{
+                    messenger.send(message);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName name) {
+
+            }
+        };
+        getContext().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        getContext().unbindService(serviceConnection);
     }
 }

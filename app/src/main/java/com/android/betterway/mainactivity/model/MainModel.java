@@ -1,9 +1,11 @@
 package com.android.betterway.mainactivity.model;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.android.betterway.MyApplication;
 import com.android.betterway.R;
 import com.android.betterway.data.DaoMaster;
 import com.android.betterway.data.DaoSession;
@@ -73,9 +75,8 @@ public final class MainModel {
      * @param key 计划对应的关键字
      * @return 查询到的计划
      */
-    public ArrayList<NewPlan> inquiryPlans(long key, Context mContext) {
-        DaoMaster.DevOpenHelper devOpenHelpernewPlan = new DaoMaster.DevOpenHelper(mContext, newPlandb);
-        DaoSession newPlanSession = new DaoMaster(devOpenHelpernewPlan.getWritableDb()).newSession();
+    public ArrayList<NewPlan> inquiryPlans(long key, Application application) {
+        DaoSession newPlanSession = ((MyApplication) application).getPlanDaoSession();
         NewPlanDao planDao = newPlanSession.getNewPlanDao();
         ArrayList<NewPlan> planList = new ArrayList<>();
         planList.addAll(planDao.queryBuilder().where(NewPlanDao.Properties.EditFinishTime.eq(key))
@@ -89,12 +90,11 @@ public final class MainModel {
      * 查询所有的路书
      * @return 路书集合
      */
-    public ArrayList<Schedule> inquiryAllSchedule(Context mContext) {
+    public ArrayList<Schedule> inquiryAllSchedule(Application application) {
         ArrayList<Schedule> schedules = new ArrayList<Schedule>();
-        DaoMaster.DevOpenHelper devOpenHelperschedule = new DaoMaster.DevOpenHelper(mContext, scheduledb);
-        DaoSession scheduleSesssion = new DaoMaster(devOpenHelperschedule.getWritableDb()).newSession();
+        DaoSession scheduleSesssion = ((MyApplication) application).getScheduleDaosession();
         ScheduleDao scheduleDao = scheduleSesssion.getScheduleDao();
-        schedules.addAll(scheduleDao.queryBuilder().build().list());
+        schedules.addAll(scheduleDao.loadAll());
         return schedules;
     }
 }

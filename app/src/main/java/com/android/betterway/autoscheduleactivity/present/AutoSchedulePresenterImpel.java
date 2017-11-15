@@ -132,6 +132,7 @@ public class AutoSchedulePresenterImpel implements AutoSchedulePresenter, Observ
                         MyTime tempMyTime = TimeUtil.longToTotalMyTime(datelong);
                         LogUtil.i(TAG, tempMyTime.toString());
                         nowMyTime = TimeUtil.myTimeAddDuration(tempMyTime, plan.getStayMinutes());
+                        plan.setStartTime(datelong);
                         plan.setEndTime(nowMyTime.getTotalLong());
                         plan.setOrder(i);
                         newPlanList.add(((LocationPlan) plan).convertToNewPlan());
