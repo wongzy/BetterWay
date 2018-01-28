@@ -1,4 +1,4 @@
-# [中文版ReadMe]() | [English ReadMe]()
+# [中文版ReadMe](https://github.com/JoshuaRogue/BetterWay/blob/master/ChineseReadMe.md) | [English ReadMe](https://github.com/JoshuaRogue/BetterWay/blob/master/EnglishReadMe.md)
 
 ![图片](https://img.shields.io/badge/BetterWay-1.0-blue.svg)
 
