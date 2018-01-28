@@ -1,7 +1,3 @@
-# [中文版ReadMe]() | [English ReadMe]()
-
-![图片](https://img.shields.io/badge/BetterWay-1.0-blue.svg)
-
 # 路书
 
 这是一款使用MVP模式，使用RxJava2、Retrofit、Dagger2、EventBus等开源项目，基于高德地图API所做的一个app，在这个app中实现了以下功能：
